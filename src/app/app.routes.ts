@@ -21,5 +21,24 @@ export const routes: Routes = [
   {
     path: 'forgot-password',
     loadComponent: () => import('./forgot-password/forgot-password.page').then( m => m.ForgotPasswordPage)
+  },
+  {
+    path: 'elderly',
+    children: [
+      {
+        path: 'profile',
+        loadComponent: () => import('./elderly/profile/profile.page').then( m => m.ProfilePage)
+      },
+      // Add other elderly routes here
+    ]
+  },
+  {
+    path: 'caregiver',
+    children: [
+      {
+        path: 'profile',
+        loadComponent: () => import('./caregiver/profile/profile.page').then( m => m.ProfilePage)
+      }
+    ]
   }
 ];

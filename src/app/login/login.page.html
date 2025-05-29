@@ -12,47 +12,73 @@
 
       <form (ngSubmit)="onLogin()" #loginForm="ngForm">
         <!-- Email Field -->
-        <ion-item class="custom-input">
-          <ion-label position="stacked">Email Address</ion-label>
-          <ion-input 
-            type="email" 
-            placeholder="Type your email here"
-            [(ngModel)]="email"
-            name="email"
-            required>
-          </ion-input>
-        </ion-item>
+        <div class="input-group">
+          <ion-label>Email Address</ion-label>
+          <ion-item class="custom-input" lines="full">
+            <ion-input 
+              type="email" 
+              placeholder="Type your email here"
+              [(ngModel)]="email"
+              name="email"
+              #emailInput="ngModel"
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+              required>
+            </ion-input>
+            <ion-note slot="error" *ngIf="emailInput.touched && emailInput.invalid">
+              <span *ngIf="emailInput.errors?.['required']">Email is required</span>
+              <span *ngIf="emailInput.errors?.['pattern']">Please enter a valid email</span>
+            </ion-note>
+          </ion-item>
+        </div>
 
         <!-- Password Field -->
-        <ion-item class="custom-input">
-          <ion-label position="stacked">Enter your Password</ion-label>
-          <ion-input 
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder="Type your password here"
-            [(ngModel)]="password"
-            name="password"
-            required>
-          </ion-input>
-          <ion-icon 
-            [name]="showPassword ? 'eye-off' : 'eye'"
-            (click)="togglePassword()"
-            slot="end"
-            class="password-toggle">
-          </ion-icon>
-        </ion-item>
+        <div class="input-group">
+          <ion-label>Enter your Password</ion-label>
+          <ion-item class="custom-input" lines="full">
+            <ion-input 
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Type your password here"
+              [(ngModel)]="password"
+              name="password"
+              #passwordInput="ngModel"
+              clearOnEdit="false"
+              required>
+            </ion-input>
+            <ion-note slot="error" *ngIf="passwordInput.touched && passwordInput.invalid">
+              <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
+            </ion-note>
+          </ion-item>
+        </div>
 
         <!-- Remember Me & Forgot Password -->
         <div class="auth-options">
-          <ion-checkbox [(ngModel)]="rememberMe" name="rememberMe">Remember me?</ion-checkbox>
-          <a class="forgot-password" routerLink="/forgot-password">
+          <div class="remember-me">
+            <ion-checkbox [(ngModel)]="rememberMe" name="rememberMe"></ion-checkbox>
+            <ion-label>Remember me?</ion-label>
+          </div>
+          <a class="forgot-password" (click)="goToForgotPassword()">
             Forgot Password?
           </a>
         </div>
 
         <!-- Login Button -->
-        <ion-button expand="block" type="submit" class="login-button">
-          Login
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="login-button" 
+          [disabled]="!loginForm.valid || isLoading">
+          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <span *ngIf="!isLoading">Login</span>
+          <span *ngIf="isLoading">Signing in...</span>
         </ion-button>
+
+        <!-- Register Link -->
+        <div class="register-section">
+          <p class="register-text">
+            Don't have account yet? 
+            <a class="register-link" (click)="goToRegister()">Register here</a>
+          </p>
+        </div>
       </form>
     </div>
   </div>

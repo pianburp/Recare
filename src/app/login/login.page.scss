@@ -1,108 +1,235 @@
 :host {
-  --ion-color-primary: #4C8DFF;
-}
-
-.login-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.logo-section {
-  margin: 32px 0;
-  text-align: center;
-
-  .app-name {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--ion-color-primary);
-    margin: 0;
+    --ion-color-primary: #4C8DFF;
+    --input-background: var(--ion-background-color);
+    --input-border: var(--ion-border-color, #ddd);
+    --input-text: var(--ion-text-color);
+    --input-placeholder: var(--ion-color-medium);
+    --icon-color: var(--ion-color-medium);
   }
-}
-
-.form-section {
-  flex: 1;
-
-  .login-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--ion-text-color);
-  }
-
-  .welcome-text {
-    color: var(--ion-color-medium);
-    margin-bottom: 32px;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-}
-
-.custom-input {
-  margin-bottom: 16px;
-  --background: transparent;
-  --border-color: var(--ion-color-medium);
-  --border-radius: 8px;
-  --padding-start: 16px;
-  --padding-end: 16px;
   
-  &::part(native) {
-    padding-left: 0;
-    padding-right: 0;
+  .login-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    max-width: 500px;
+    margin: 0 auto;
   }
-
-  ion-label {
-    font-weight: 500;
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
-  ion-input {
-    --padding-start: 0;
-    --padding-end: 0;
-    font-size: 1rem;
-  }
-}
-
-.password-toggle {
-  font-size: 1.2rem;
-  opacity: 0.7;
-  cursor: pointer;
-  padding: 8px;
-}
-
-.auth-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 16px 0 24px;
-
-  ion-checkbox {
-    --size: 18px;
-    margin-right: 8px;
-  }
-
-  .forgot-password {
-    color: var(--ion-color-medium);
-    font-size: 0.9rem;
-    text-decoration: none;
-    font-weight: 500;
-    cursor: pointer;
-    
-    &:hover {
-      text-decoration: underline;
+  
+  .logo-section {
+    margin: 32px 0;
+    text-align: center;
+  
+    .app-name {
+      font-size: 2.5rem;
+      font-weight: 700;
       color: var(--ion-color-primary);
+      margin: 0;
+    }
+  
+    .logo {
+      max-width: 150px;
+      height: auto;
     }
   }
-}
-
-.login-button {
-  margin-top: 16px;
-  --border-radius: 8px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  font-weight: 600;
-}
+  
+  .form-section {
+    flex: 1;
+  
+    .login-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ion-text-color);
+    }
+  
+    .welcome-text {
+      color: var(--ion-color-medium);
+      margin-bottom: 32px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+  
+    ion-label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      padding-left: 4px;
+    }
+  }
+  
+  .custom-input {
+    margin: 0;
+    --background: var(--input-background);
+    --border-color: var(--input-border);
+    --border-radius: 8px;
+    --border-width: 1px;
+    --border-style: solid;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --highlight-height: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    
+    &::part(native) {
+      background: var(--input-background);
+    }
+  
+    &.item-has-focus {
+      --border-color: var(--ion-color-primary);
+      --border-width: 2px;
+    }
+  
+    &.ion-invalid.ion-touched {
+      --border-color: var(--ion-color-danger);
+    }
+  
+    ion-input {
+      --padding-start: 0;
+      --padding-end: 0;
+      --padding-top: 12px;
+      --padding-bottom: 12px;
+      --placeholder-color: var(--input-placeholder) !important;
+      --placeholder-opacity: 1 !important;
+      font-size: 1rem;
+      min-height: 48px;
+      color: var(--input-text);
+    }
+  
+    ion-note {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      color: var(--ion-color-danger);
+    }
+  }
+  
+  .password-toggle {
+    font-size: 1.4rem !important;
+    padding: 8px 12px;
+    color: var(--icon-color) !important;
+    cursor: pointer;
+    margin-right: 4px;
+    opacity: 0.9;
+    z-index: 10;
+    position: relative;
+    
+    &:hover {
+      color: var(--ion-color-primary) !important;
+      opacity: 1;
+    }
+  }
+  
+  .auth-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0 24px;
+  
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+  
+      ion-checkbox {
+        --size: 18px;
+        margin: 0;
+      }
+  
+      ion-label {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--ion-text-color);
+      }
+    }
+  
+    .forgot-password {
+      color: var(--ion-color-primary);
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      
+      &:hover {
+        text-decoration: underline;
+        opacity: 0.8;
+      }
+    }
+  }
+  
+  .login-button {
+    margin-top: 16px;
+    --border-radius: 8px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+  }
+  
+  .register-section {
+    margin-top: 24px;
+    text-align: center;
+  
+    .register-text {
+      color: var(--ion-color-medium);
+      font-size: 0.95rem;
+      margin: 0;
+  
+      .register-link {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  
+  // Dark mode specific adjustments
+  @media (prefers-color-scheme: dark) {
+    :host {
+      --input-background: #ffffff;
+      --input-border: rgba(var(--ion-color-medium-rgb), 0.3);
+      --input-placeholder: #666666 !important;
+      --input-text: #333333;
+      --icon-color: #666666;
+    }
+  
+    .custom-input {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --background: #ffffff !important;
+  
+      &.item-has-focus {
+        --background: #ffffff !important;
+        --border-color: var(--ion-color-primary);
+      }
+  
+      &::part(native) {
+        background: #ffffff !important;
+      }
+  
+      ion-input {
+        --placeholder-color: #666666 !important;
+        --placeholder-opacity: 1 !important;
+        color: #333333 !important;
+        
+        &::part(native) {
+          background: #ffffff !important;
+          color: #333333 !important;
+        }
+      }
+    }
+  
+    .password-toggle {
+      color: #666666 !important;
+      opacity: 1;
+      
+      &:hover {
+        color: var(--ion-color-primary) !important;
+        opacity: 1;
+      }
+    }
+  }

@@ -1,13 +1,183 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="register-container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <img src="../../assets/logo.svg" alt="ReCare Logo" class="logo">
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- Register Form Section -->
+    <div class="form-section">
+      <h2 class="register-title">Create your ReCare account</h2>
+      <p class="welcome-text">Create your ReCare account to access personalized services and stay connected with our community.</p>
+
+      <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+        <!-- Full Name Field -->
+        <div class="input-group">
+          <ion-label>Full Name</ion-label>
+          <ion-item class="custom-input" lines="full">
+            <ion-input 
+              type="text" 
+              placeholder="Enter your full name"
+              [(ngModel)]="fullName"
+              name="fullName"
+              #fullNameInput="ngModel"
+              required
+              minlength="2">
+            </ion-input>
+            <ion-note slot="error" *ngIf="fullNameInput.touched && fullNameInput.invalid">
+              <span *ngIf="fullNameInput.errors?.['required']">Full name is required</span>
+              <span *ngIf="fullNameInput.errors?.['minlength']">Name must be at least 2 characters</span>
+            </ion-note>
+          </ion-item>
+        </div>
+
+        <!-- Email Field -->
+        <div class="input-group">
+          <ion-label>Email Address</ion-label>
+          <ion-item class="custom-input" lines="full">
+            <ion-input 
+              type="email" 
+              placeholder="Enter your email address"
+              [(ngModel)]="email"
+              name="email"
+              #emailInput="ngModel"
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+              required>
+            </ion-input>
+            <ion-note slot="error" *ngIf="emailInput.touched && emailInput.invalid">
+              <span *ngIf="emailInput.errors?.['required']">Email is required</span>
+              <span *ngIf="emailInput.errors?.['pattern']">Please enter a valid email</span>
+            </ion-note>
+          </ion-item>
+        </div>
+
+        <!-- Password Field -->
+        <div class="input-group">
+          <ion-label>Password</ion-label>
+          <ion-item class="custom-input" lines="full">
+            <ion-input 
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Create a strong password"
+              [(ngModel)]="password"
+              name="password"
+              #passwordInput="ngModel"
+              (ionInput)="checkPasswordStrength()"
+              required
+              minlength="8">
+            </ion-input>
+            <ion-note slot="error" *ngIf="passwordInput.touched && passwordInput.invalid">
+              <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
+              <span *ngIf="passwordInput.errors?.['minlength']">Password must be at least 8 characters</span>
+            </ion-note>
+          </ion-item>
+          
+          <!-- Password Strength Indicator -->
+          <div class="password-strength" *ngIf="password.length > 0">
+            <div class="strength-bar">
+              <div class="strength-fill" [ngClass]="passwordStrength.class" [style.width.%]="passwordStrength.percentage"></div>
+            </div>
+            <p class="strength-text" [ngClass]="passwordStrength.class">
+              {{ passwordStrength.text }}
+            </p>
+            <div class="password-requirements" *ngIf="passwordStrength.level < 3">
+              <p class="requirements-title">Password should contain:</p>
+              <ul class="requirements-list">
+                <li [ngClass]="{'met': hasMinLength}">At least 8 characters</li>
+                <li [ngClass]="{'met': hasUppercase}">One uppercase letter</li>
+                <li [ngClass]="{'met': hasLowercase}">One lowercase letter</li>
+                <li [ngClass]="{'met': hasNumber}">One number</li>
+                <li [ngClass]="{'met': hasSpecialChar}">One special character</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="input-group">
+          <ion-label>Confirm Password</ion-label>
+          <ion-item class="custom-input" lines="full">
+            <ion-input 
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Confirm your password"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              #confirmPasswordInput="ngModel"
+              required>
+            </ion-input>
+            <ion-note slot="error" *ngIf="confirmPasswordInput.touched && (confirmPasswordInput.invalid || !passwordsMatch())">
+              <span *ngIf="confirmPasswordInput.errors?.['required']">Please confirm your password</span>
+              <span *ngIf="confirmPassword && !passwordsMatch()">Passwords do not match</span>
+            </ion-note>
+          </ion-item>
+        </div>
+
+        <!-- User Type Selection -->
+        <div class="input-group">
+          <ion-label>I want to register as:</ion-label>
+          <ion-radio-group [(ngModel)]="userType" name="userType" #userTypeInput="ngModel" required>
+            <div class="user-type-options">
+              <ion-item class="user-type-option">
+                <ion-radio slot="start" value="elderly"></ion-radio>
+                <ion-label>
+                  <div class="option-content">
+                    <div class="option-icon">👴</div>
+                    <div class="option-text">
+                      <h3>Elderly</h3>
+                      <p>Access care services and connect with caregivers</p>
+                    </div>
+                  </div>
+                </ion-label>
+              </ion-item>
+              
+              <ion-item class="user-type-option">
+                <ion-radio slot="start" value="caregiver"></ion-radio>
+                <ion-label>
+                  <div class="option-content">
+                    <div class="option-icon">👨‍⚕️</div>
+                    <div class="option-text">
+                      <h3>Caregiver</h3>
+                      <p>Provide care services and support elderly clients</p>
+                    </div>
+                  </div>
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-radio-group>
+          <ion-note slot="error" *ngIf="userTypeInput.touched && userTypeInput.invalid">
+            <span *ngIf="userTypeInput.errors?.['required']">Please select your user type</span>
+          </ion-note>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-section">
+          <ion-checkbox [(ngModel)]="acceptTerms" name="acceptTerms" #termsInput="ngModel" required></ion-checkbox>
+          <ion-label class="terms-label">
+            I agree to the <a class="terms-link" (click)="openTerms()">Terms & Conditions</a> and <a class="terms-link" (click)="openPrivacy()">Privacy Policy</a>
+          </ion-label>
+          <ion-note slot="error" *ngIf="termsInput.touched && termsInput.invalid" class="terms-error">
+            <span *ngIf="termsInput.errors?.['required']">You must accept the terms and conditions</span>
+          </ion-note>
+        </div>
+
+        <!-- Register Button -->
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="register-button" 
+          [disabled]="!isFormValid() || isLoading">
+          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <span *ngIf="!isLoading">Create Account</span>
+          <span *ngIf="isLoading">Creating Account...</span>
+        </ion-button>
+
+        <!-- Login Link -->
+        <div class="login-section">
+          <p class="login-text">
+            Already have an account? 
+            <a class="login-link" (click)="goToLogin()">Sign in here</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
 </ion-content>

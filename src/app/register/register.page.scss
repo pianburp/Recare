@@ -1,0 +1,409 @@
+:host {
+    --ion-color-primary: #4C8DFF;
+    --input-background: var(--ion-background-color);
+    --input-border: var(--ion-border-color, #ddd);
+    --input-text: var(--ion-text-color);
+    --input-placeholder: var(--ion-color-medium);
+    --icon-color: var(--ion-color-medium);
+  }
+  
+  .register-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .logo-section {
+    margin: 20px 0;
+    text-align: center;
+  
+    .app-name {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+      margin: 0;
+    }
+  
+    .logo {
+      max-width: 120px;
+      height: auto;
+    }
+  }
+  
+  .form-section {
+    flex: 1;
+  
+    .register-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ion-text-color);
+    }
+  
+    .welcome-text {
+      color: var(--ion-color-medium);
+      margin-bottom: 24px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+  
+    ion-label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--input-text);
+      margin-bottom: 8px;
+      padding-left: 4px;
+    }
+  }
+  
+  .custom-input {
+    margin: 0;
+    --background: var(--input-background);
+    --border-color: var(--input-border);
+    --border-radius: 8px;
+    --border-width: 1px;
+    --border-style: solid;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --highlight-height: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    
+    &::part(native) {
+      background: var(--input-background);
+    }
+  
+    &.item-has-focus {
+      --border-color: var(--ion-color-primary);
+      --border-width: 2px;
+    }
+  
+    &.ion-invalid.ion-touched {
+      --border-color: var(--ion-color-danger);
+    }
+  
+    ion-input {
+      --padding-start: 0;
+      --padding-end: 0;
+      --padding-top: 12px;
+      --padding-bottom: 12px;
+      --placeholder-color: var(--input-placeholder) !important;
+      --placeholder-opacity: 1 !important;
+      font-size: 1rem;
+      min-height: 48px;
+      color: var(--input-text);
+    }
+  
+    ion-note {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      color: var(--ion-color-danger);
+    }
+  }
+  
+  .password-toggle {
+    font-size: 1.4rem !important;
+    padding: 8px 12px;
+    color: var(--icon-color) !important;
+    cursor: pointer;
+    margin-right: 4px;
+    opacity: 0.9;
+    z-index: 10;
+    position: relative;
+    
+    &:hover {
+      color: var(--ion-color-primary) !important;
+      opacity: 1;
+    }
+  }
+  
+  // Password Strength Indicator
+  .password-strength {
+    margin-top: 8px;
+  
+    .strength-bar {
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 4px;
+  
+      .strength-fill {
+        height: 100%;
+        transition: width 0.3s ease, background-color 0.3s ease;
+        border-radius: 2px;
+  
+        &.weak {
+          background-color: #f44336;
+        }
+  
+        &.fair {
+          background-color: #ff9800;
+        }
+  
+        &.good {
+          background-color: #2196f3;
+        }
+  
+        &.strong {
+          background-color: #4caf50;
+        }
+      }
+    }
+  
+    .strength-text {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin: 4px 0;
+  
+      &.weak {
+        color: #f44336;
+      }
+  
+      &.fair {
+        color: #ff9800;
+      }
+  
+      &.good {
+        color: #2196f3;
+      }
+  
+      &.strong {
+        color: #4caf50;
+      }
+    }
+  
+    .password-requirements {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(var(--ion-color-light-rgb), 0.5);
+      border-radius: 6px;
+  
+      .requirements-title {
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin: 0 0 4px 0;
+        color: var(--ion-color-medium);
+      }
+  
+      .requirements-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+  
+        li {
+          font-size: 0.75rem;
+          padding: 2px 0;
+          color: var(--ion-color-danger);
+          
+          &.met {
+            color: var(--ion-color-success);
+          }
+  
+          &::before {
+            content: "✗ ";
+            margin-right: 4px;
+          }
+  
+          &.met::before {
+            content: "✓ ";
+          }
+        }
+      }
+    }
+  }
+  
+  // User Type Selection
+  .user-type-options {
+    margin-top: 8px;
+  
+    .user-type-option {
+      margin-bottom: 12px;
+      --border-radius: 8px;
+      --border-width: 1px;
+      --border-style: solid;
+      --border-color: var(--input-border);
+      --background: var(--input-background);
+      --padding-start: 16px;
+      --padding-end: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+      &.item-radio-checked {
+        --border-color: var(--ion-color-primary);
+        --border-width: 2px;
+        --background: rgba(var(--ion-color-primary-rgb), 0.05);
+      }
+  
+      .option-content {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 8px 0;
+  
+        .option-icon {
+          font-size: 2rem;
+          margin-right: 12px;
+        }
+  
+        .option-text {
+          flex: 1;
+  
+          h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+            color: var(--ion-text-color);
+          }
+  
+          p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: var(--ion-color-medium);
+          }
+        }
+      }
+    }
+  }
+  
+  // Terms and Conditions
+  .terms-section {
+    display: flex;
+    align-items: flex-start;
+    margin: 20px 0;
+    gap: 8px;
+  
+    ion-checkbox {
+      --size: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+  
+    .terms-label {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--ion-text-color);
+      margin: 0;
+  
+      .terms-link {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  
+    .terms-error {
+      font-size: 0.8rem;
+      color: var(--ion-color-danger);
+      margin-top: 4px;
+      width: 100%;
+    }
+  }
+  
+  .register-button {
+    margin-top: 16px;
+    --border-radius: 8px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 600;
+  }
+  
+  .login-section {
+    margin-top: 24px;
+    text-align: center;
+  
+    .login-text {
+      color: var(--ion-color-medium);
+      font-size: 0.95rem;
+      margin: 0;
+  
+      .login-link {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  
+  // Dark mode specific adjustments
+  @media (prefers-color-scheme: dark) {
+    :host {
+      --input-background: #ffffff;
+      --input-border: rgba(var(--ion-color-medium-rgb), 0.3);
+      --input-placeholder: #666666 !important;
+      --input-text: #333333;
+      --icon-color: #666666;
+    }
+  
+    .custom-input {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --background: #ffffff !important;
+  
+      &.item-has-focus {
+        --background: #ffffff !important;
+        --border-color: var(--ion-color-primary);
+      }
+  
+      &::part(native) {
+        background: #ffffff !important;
+      }
+  
+      ion-input {
+        --placeholder-color: #666666 !important;
+        --placeholder-opacity: 1 !important;
+        color: #333333 !important;
+        
+        &::part(native) {
+          background: #ffffff !important;
+          color: #333333 !important;
+        }
+      }
+    }
+  
+    .password-toggle {
+      color: #666666 !important;
+      opacity: 1;
+      
+      &:hover {
+        color: var(--ion-color-primary) !important;
+        opacity: 1;
+      }
+    }
+  
+    .user-type-option {
+      --background: #ffffff !important;
+  
+      &.item-radio-checked {
+        --background: rgba(var(--ion-color-primary-rgb), 0.05) !important;
+      }
+  
+      .option-content .option-text {
+        h3 {
+          color: #333333;
+        }
+  
+        p {
+          color: #666666;
+        }
+      }
+    }
+  
+    .password-requirements {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
