@@ -68,3 +68,19 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Environment files (if containing sensitive data)
+src/environments/environment.ts
+src/environments/environment.prod.ts
+
+# Node modules
+node_modules/
+
+# Build outputs
+/dist/
+/www/

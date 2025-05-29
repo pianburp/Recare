@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="login-container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <img src="../../assets/logo.svg" alt="ReCare Logo" class="logo">
+    </div>
+
+    <!-- Login Form Section -->
+    <div class="form-section">
+      <h2 class="login-title">Login with ReCare</h2>
+      <p class="welcome-text">Welcome back! Log in to manage your account and explore new opportunities with ReCare.</p>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <!-- Email Field -->
+        <ion-item class="custom-input">
+          <ion-label position="stacked">Email Address</ion-label>
+          <ion-input 
+            type="email" 
+            placeholder="Type your email here"
+            [(ngModel)]="email"
+            name="email"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Password Field -->
+        <ion-item class="custom-input">
+          <ion-label position="stacked">Enter your Password</ion-label>
+          <ion-input 
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Type your password here"
+            [(ngModel)]="password"
+            name="password"
+            required>
+          </ion-input>
+          <ion-icon 
+            [name]="showPassword ? 'eye-off' : 'eye'"
+            (click)="togglePassword()"
+            slot="end"
+            class="password-toggle">
+          </ion-icon>
+        </ion-item>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="auth-options">
+          <ion-checkbox [(ngModel)]="rememberMe" name="rememberMe">Remember me?</ion-checkbox>
+          <a class="forgot-password" routerLink="/forgot-password">
+            Forgot Password?
+          </a>
+        </div>
+
+        <!-- Login Button -->
+        <ion-button expand="block" type="submit" class="login-button">
+          Login
+        </ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>
