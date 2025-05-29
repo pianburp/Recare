@@ -1,0 +1,7 @@
+{
+  "name": "Recare",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
