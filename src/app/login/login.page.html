@@ -44,6 +44,12 @@
               clearOnEdit="false"
               required>
             </ion-input>
+            <ion-icon 
+              slot="end" 
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" 
+              class="password-toggle"
+              (click)="showPassword = !showPassword">
+            </ion-icon>
             <ion-note slot="error" *ngIf="passwordInput.touched && passwordInput.invalid">
               <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
             </ion-note>

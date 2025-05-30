@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, user, sendPasswordResetEmail, sendEmailVerification } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,19 @@ export class AuthService {
 
   async resetPassword(email: string) {
     return await sendPasswordResetEmail(this.auth, email);
+  }
+
+  async sendEmailVerification(user: any) {
+    return await sendEmailVerification(user);
+  }
+
+  // Helper method to check if current user's email is verified
+  isEmailVerified(): boolean {
+    return this.auth.currentUser?.emailVerified || false;
+  }
+
+  // Helper method to get current user
+  getCurrentUser() {
+    return this.auth.currentUser;
   }
 }

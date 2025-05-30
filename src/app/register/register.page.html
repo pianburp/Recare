@@ -65,6 +65,12 @@
               required
               minlength="8">
             </ion-input>
+            <ion-icon 
+              slot="end" 
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" 
+              class="password-toggle"
+              (click)="showPassword = !showPassword">
+            </ion-icon>
             <ion-note slot="error" *ngIf="passwordInput.touched && passwordInput.invalid">
               <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
               <span *ngIf="passwordInput.errors?.['minlength']">Password must be at least 8 characters</span>
@@ -104,6 +110,12 @@
               #confirmPasswordInput="ngModel"
               required>
             </ion-input>
+            <ion-icon 
+              slot="end" 
+              [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'" 
+              class="password-toggle"
+              (click)="showConfirmPassword = !showConfirmPassword">
+            </ion-icon>
             <ion-note slot="error" *ngIf="confirmPasswordInput.touched && (confirmPasswordInput.invalid || !passwordsMatch())">
               <span *ngIf="confirmPasswordInput.errors?.['required']">Please confirm your password</span>
               <span *ngIf="confirmPassword && !passwordsMatch()">Passwords do not match</span>

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
+import { FirestoreService } from '../services/firestore.service';
 import { LoadingController, AlertController, ToastController } from '@ionic/angular';
 
 interface PasswordStrength {
@@ -13,6 +14,16 @@ interface PasswordStrength {
   percentage: number;
   text: string;
   class: string;
+}
+
+interface UserData {
+  uid: string;
+  email: string;
+  fullName: string;
+  userType: string;
+  isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 @Component({
@@ -48,6 +59,7 @@ export class RegisterPage implements OnInit {
   hasSpecialChar: boolean = false;
 
   private authService = inject(AuthService);
+  private firestoreService = inject(FirestoreService);
   private router = inject(Router);
   private loadingController = inject(LoadingController);
   private alertController = inject(AlertController);
@@ -61,8 +73,8 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
     // Check if user is already logged in
     this.authService.user$.subscribe(user => {
-      if (user) {
-        // User is already logged in, redirect based on their type
+      if (user && user.emailVerified) {
+        // User is already logged in and verified, redirect based on their type
         this.router.navigate(['/elderly/profile']); // You can modify this based on user type
       }
     });
@@ -136,7 +148,7 @@ export class RegisterPage implements OnInit {
       this.fullName.trim().length >= 2 &&
       this.isValidEmail(this.email) &&
       this.password.length >= 8 &&
-      this.passwordStrength.level >= 3 && // Require at least "good" password
+      this.passwordStrength.level >= 3 && 
       this.passwordsMatch() &&
       this.userType !== '' &&
       this.acceptTerms
@@ -168,15 +180,28 @@ export class RegisterPage implements OnInit {
       
       console.log('Registration successful:', userCredential.user);
       
-      // TODO: Save additional user data (fullName, userType) to Firestore
-      // You can implement this in your AuthService or create a UserService
+      // Send email verification
+      await this.authService.sendEmailVerification(userCredential.user);
       
-      // Show success message
-      await this.showSuccessToast('Account created successfully! Welcome to ReCare!');
+      // Prepare user data for Firestore
+      const userData: UserData = {
+        uid: userCredential.user.uid,
+        email: this.email.toLowerCase().trim(),
+        fullName: this.fullName.trim(),
+        userType: this.userType,
+        isVerified: false, // Will be updated when email is verified
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
       
-      // Navigate based on user type
-      const route = this.userType === 'elderly' ? '/elderly/profile' : '/caregiver/profile';
-      await this.router.navigate([route]);
+      // Save additional user data to Firestore
+      await this.saveUserDataToFirestore(userData);
+      
+      // Show success message with email verification instructions
+      await this.showEmailVerificationAlert();
+      
+      // Navigate to login page
+      await this.router.navigate(['/login']);
       
     } catch (error: any) {
       console.error('Registration error:', error);
@@ -212,6 +237,19 @@ export class RegisterPage implements OnInit {
     }
   }
 
+  private async saveUserDataToFirestore(userData: UserData) {
+    try {
+      // Use the UID as the document ID for easy retrieval
+      await this.firestoreService.addDocumentWithId('users', userData.uid, userData);
+      console.log('User data saved to Firestore successfully');
+    } catch (error) {
+      console.error('Error saving user data to Firestore:', error);
+      // Don't throw error here as the user is already created in Auth
+      // Just log the error and continue
+      await this.showErrorToast('Account created, but profile data could not be saved. Please contact support.');
+    }
+  }
+
   async goToLogin() {
     this.router.navigate(['/login']);
   }
@@ -219,8 +257,9 @@ export class RegisterPage implements OnInit {
   async openTerms() {
     const alert = await this.alertController.create({
       header: 'Terms & Conditions',
-      message: 'Terms and conditions content would go here. This would typically be a longer document or link to a separate page.',
-      buttons: ['Close']
+      message: `nanti ubah`,
+      buttons: ['Close'],
+      cssClass: 'terms-alert'
     });
     await alert.present();
   }
@@ -228,10 +267,60 @@ export class RegisterPage implements OnInit {
   async openPrivacy() {
     const alert = await this.alertController.create({
       header: 'Privacy Policy',
-      message: 'Privacy policy content would go here. This would typically be a longer document or link to a separate page.',
-      buttons: ['Close']
+      message: `nanti ubah`,
+      buttons: ['Close'],
+      cssClass: 'terms-alert'
     });
     await alert.present();
+  }
+
+  private async showEmailVerificationAlert() {
+    const alert = await this.alertController.create({
+      header: 'Account Created Successfully!',
+      message: `We've sent a verification email to: ${this.email}.
+      Please check your email and click the verification link to activate your account.
+      Don't forget to check your spam folder if you don't see the email.`,
+      buttons: [
+        {
+          text: 'Resend Email',
+          role: 'cancel',
+          handler: () => {
+            this.resendVerificationEmail();
+          }
+        },
+        {
+          text: 'Go to Login',
+          handler: () => {
+            this.router.navigate(['/login']);
+          }
+        }
+      ],
+      cssClass: 'verification-alert'
+    });
+    await alert.present();
+  }
+
+  private async resendVerificationEmail() {
+    try {
+      const loading = await this.loadingController.create({
+        message: 'Sending verification email...',
+        spinner: 'crescent'
+      });
+      await loading.present();
+
+      const user = this.authService.getCurrentUser();
+      if (user) {
+        await this.authService.sendEmailVerification(user);
+        await loading.dismiss();
+        await this.showSuccessToast('Verification email sent again! Please check your inbox.');
+      } else {
+        await loading.dismiss();
+        await this.showErrorToast('Unable to resend email. Please try registering again.');
+      }
+    } catch (error) {
+      console.error('Error resending verification email:', error);
+      await this.showErrorToast('Failed to resend verification email. Please try again.');
+    }
   }
 
   private async showErrorToast(message: string) {

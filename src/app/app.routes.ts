@@ -40,5 +40,9 @@ export const routes: Routes = [
         loadComponent: () => import('./caregiver/profile/profile.page').then( m => m.ProfilePage)
       }
     ]
+  },  {
+    path: 'profile',
+    loadComponent: () => import('./admin/profile/profile.page').then( m => m.ProfilePage)
   }
+
 ];
