@@ -314,7 +314,9 @@
 
 .login-section {
   margin-top: 24px;
+  margin-bottom: 40px; // Added bottom margin for better spacing
   text-align: center;
+  padding-bottom: 20px; // Added padding for extra breathing room
 
   .login-text {
     color: var(--ion-color-medium);
@@ -491,5 +493,40 @@
 
   .strength-bar {
     background: var(--ion-color-medium);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --input-background: #ffffff;
+    --input-border: rgba(var(--ion-color-medium-rgb), 0.3);
+    --input-placeholder: #666666 !important;
+    --input-text: #333333;
+    --icon-color: #666666;
+  }
+
+  .custom-input {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --background: #ffffff !important;
+
+    &.item-has-focus {
+      --background: #ffffff !important;
+      --border-color: var(--ion-color-primary);
+    }
+
+    &::part(native) {
+      background: #ffffff !important;
+    }
+
+    ion-input {
+      --placeholder-color: #666666 !important;
+      --placeholder-opacity: 1 !important;
+      color: #333333 !important;
+      
+      &::part(native) {
+        background: #ffffff !important;
+        color: #333333 !important;
+      }
+    }
   }
 }

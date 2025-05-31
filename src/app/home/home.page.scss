@@ -1,27 +1,515 @@
+// Optimized variables for smooth animations
+:host {
+  --primary-gradient: linear-gradient(135deg, #4F9CF9 0%, #3b82f6 100%);
+  --surface-glass: rgba(255, 255, 255, 0.05);
+  --surface-glass-border: rgba(255, 255, 255, 0.1);
+  --text-primary: var(--ion-text-color);
+  --text-secondary: var(--ion-color-medium);
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-button: 0 4px 20px rgba(76, 140, 255, 0.3);
+  
+  // Optimized easing functions for smoother animations
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+// Background with optimized floating elements
+ion-content {
+  --background: linear-gradient(135deg, 
+    var(--ion-background-color) 0%, 
+    rgba(79, 156, 249, 0.02) 50%, 
+    var(--ion-background-color) 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+.background-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.floating-element {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  opacity: 0.08;
+  // Use transform3d and will-change for GPU acceleration
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: smoothFloat 25s infinite ease-in-out;
+  
+  &.element-1 {
+    width: 120px;
+    height: 120px;
+    top: 10%;
+    left: -60px;
+    animation-delay: 0s;
+  }
+  
+  &.element-2 {
+    width: 80px;
+    height: 80px;
+    top: 60%;
+    right: -40px;
+    animation-delay: -8s;
+  }
+  
+  &.element-3 {
+    width: 60px;
+    height: 60px;
+    bottom: 20%;
+    left: 10%;
+    animation-delay: -16s;
+  }
+}
+
+// Optimized floating animation using transform3d
+@keyframes smoothFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(10px, -20px, 0) rotate(90deg);
+  }
+  50% {
+    transform: translate3d(-5px, -35px, 0) rotate(180deg);
+  }
+  75% {
+    transform: translate3d(-15px, -10px, 0) rotate(270deg);
+  }
+}
+
+// Highly optimized main container
 #container {
   text-align: center;
-
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
-  transform: translateY(-50%);
+  // Use transform3d for better performance
+  transform: translate3d(0, -50%, 0);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  z-index: 1;
+  
+  // Initial state - invisible
+  opacity: 0;
+  transform: translate3d(0, -50%, 0) scale(0.95);
+  
+  // Smooth transition properties
+  transition: 
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+  will-change: opacity, transform;
+
+  &.loaded {
+    opacity: 1;
+    transform: translate3d(0, -50%, 0) scale(1);
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+// Completely rewritten smooth fade-up animations
+.animate-fade-up {
+  // Initial state
+  opacity: 0;
+  transform: translate3d(0, 30px, 0);
+  
+  // Optimized transition with better easing
+  transition: 
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+  will-change: opacity, transform;
+  
+  // Animate in state (triggered by JavaScript)
+  &.animate-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+// Logo with optimized performance
+.logo-container {
+  display: inline-block;
+  margin-bottom: 8px;
+  
+  .logo-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    
+    // Optimized hover transition
+    transition: 
+      transform 0.3s var(--ease-out-quart),
+      box-shadow 0.3s var(--ease-out-quart);
+    will-change: transform;
 
-  color: #8c8c8c;
-
-  margin: 0;
+    &:hover {
+      transform: translate3d(0, -2px, 0);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
+// Optimized logo styling
+.logo {
+  width: 191px;
+  height: 34px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  
+  .logo-path {
+    transition: filter 0.4s var(--ease-out-quart);
+  }
+  
+  .logo-text {
+    opacity: 0.9;
+    transition: opacity 0.4s var(--ease-out-quart);
+  }
+
+  &:hover {
+    .logo-text {
+      opacity: 1;
+    }
+    
+    .logo-path {
+      filter: drop-shadow(0 0 8px rgba(79, 156, 249, 0.4));
+    }
+  }
+}
+
+// Optimized content styling
+.welcome-content {
+  max-width: 500px;
+  
+  .title-wrapper {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  
+  .main-title {
+    font-size: clamp(28px, 5vw, 36px);
+    line-height: 1.2;
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 16px;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .gradient-line {
+    width: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+    margin: 0 auto;
+    border-radius: 2px;
+    transition: width 0.8s var(--ease-out-expo) 0.4s;
+    
+    .loaded & {
+      width: 60px;
+    }
+  }
+
+  .primary-subtitle {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 16px 0 8px;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+  
+  .secondary-subtitle {
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    margin: 0;
+    opacity: 0.7;
+    font-weight: 400;
+  }
+}
+
+// Highly optimized button animations
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+
+  ion-button {
+    --border-radius: 16px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+    font-size: 18px;
+    font-weight:bold;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    
+    // Optimized button transitions
+    transition: 
+      transform 0.2s var(--ease-out-quart),
+      box-shadow 0.2s var(--ease-out-quart);
+    will-change: transform;
+
+    &.primary-button {
+      --background: var(--primary-gradient);
+      --box-shadow: 0 4px 16px rgba(76, 140, 255, 0.25);
+      
+      &:hover:not(:active) {
+        --box-shadow: 0 6px 20px rgba(76, 140, 255, 0.35);
+        transform: translate3d(0, -2px, 0);
+      }
+
+      &:active {
+        transform: translate3d(0, 0, 0) scale(0.98);
+        transition-duration: 0.1s;
+      }
+    }
+
+    &.secondary-button {
+      --border-width: 2px;
+      --border-color: rgba(79, 156, 249, 0.3);
+      --color: var(--ion-color-primary);
+      background: rgba(255, 255, 255, 0.03);
+      
+      &:hover:not(:active) {
+        --border-color: var(--ion-color-primary);
+        --background: rgba(79, 156, 249, 0.08);
+        transform: translate3d(0, -2px, 0);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      }
+
+      &:active {
+        transform: translate3d(0, 0, 0) scale(0.98);
+        transition-duration: 0.1s;
+      }
+    }
+  }
+}
+
+// Optimized button content
+.button-text {
+  position: relative;
+  transition: transform 0.1s var(--ease-out-quart);
+}
+
+// Optimized floating stats
+.floating-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  opacity: 0.8;
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    min-width: 80px;
+    
+    // Smooth hover transitions
+    transition: 
+      transform 0.2s var(--ease-out-quart),
+      background 0.2s var(--ease-out-quart),
+      box-shadow 0.2s var(--ease-out-quart);
+    will-change: transform;
+
+    &:hover:not(:active) {
+      transform: translate3d(0, -3px, 0);
+      background: rgba(79, 156, 249, 0.08);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    &:active {
+      transform: translate3d(0, -1px, 0) scale(0.98);
+      transition-duration: 0.1s;
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      filter: grayscale(0.3);
+      transition: 
+        filter 0.2s var(--ease-out-quart),
+        transform 0.2s var(--ease-out-quart);
+    }
+
+    .stat-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    &:hover .stat-icon {
+      filter: grayscale(0);
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Responsive design with maintained performance
+@media (max-width: 768px) {
+  #container {
+    padding: 16px;
+    gap: 32px;
+  }
+
+  .logo {
+    width: 160px;
+  }
+
+  .logo-container .logo-wrapper {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .welcome-content {
+    .main-title {
+      font-size: clamp(24px, 6vw, 28px);
+    }
+
+    .primary-subtitle {
+      font-size: 16px;
+    }
+    
+    .secondary-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .action-buttons {
+    max-width: 280px;
+    
+    ion-button {
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      font-size: 15px;
+    }
+  }
+
+  .floating-stats {
+    gap: 16px;
+    
+    .stat-item {
+      padding: 12px 8px;
+      min-width: 70px;
+      
+      .stat-icon {
+        font-size: 20px;
+      }
+      
+      .stat-text {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    width: 140px;
+  }
+
+  .welcome-content .main-title {
+    font-size: clamp(22px, 7vw, 26px);
+  }
+
+  .floating-stats {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    
+    .stat-item {
+      flex-direction: row;
+      gap: 12px;
+      padding: 12px 16px;
+      min-width: auto;
+      width: 100%;
+      max-width: 200px;
+      
+      .stat-text {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Dark mode optimizations
+@media (prefers-color-scheme: dark) {
+  :host {
+    --surface-glass: rgba(255, 255, 255, 0.08);
+    --surface-glass-border: rgba(255, 255, 255, 0.15);
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  ion-content {
+    --background: linear-gradient(135deg, 
+      var(--ion-background-color) 0%, 
+      rgba(79, 156, 249, 0.05) 50%, 
+      var(--ion-background-color) 100%);
+  }
+
+  .floating-element {
+    opacity: 0.12;
+  }
+
+  .action-buttons ion-button.secondary-button {
+    --border-color: rgba(79, 156, 249, 0.4);
+    --background: rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      --background: rgba(79, 156, 249, 0.15);
+    }
+  }
+}
+
+// Accessibility: Respect reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.1s !important;
+  }
+  
+  .floating-element {
+    animation: none;
+    opacity: 0.05;
+  }
+  
+  .animate-fade-up {
+    transition-duration: 0.1s !important;
+  }
+  
+  #container {
+    transition-duration: 0.1s !important;
+  }
+}
+
+// Remove original styles that could conflict
 #container a {
   text-decoration: none;
 }

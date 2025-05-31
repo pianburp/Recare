@@ -1,23 +1,453 @@
-.profile-content {
-    padding: 20px;
-    height: 100%;
+:host {
+  --ion-color-primary: #4C8DFF;
+  --profile-spacing: 16px;
+  --card-border-radius: 12px;
+  --section-spacing: 24px;
+}
+
+.profile-container {
+  padding: var(--profile-spacing);
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 80px; // Extra space at bottom
+}
+
+// Profile Header Card
+.profile-header-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  .profile-header {
     display: flex;
-    flex-direction: column;
-  }
-  
-  .logout-section {
-    margin-top: auto;
-    margin-bottom: 40px;
-  
-    ion-button {
-      --border-radius: 8px;
-      --padding-top: 12px;
-      --padding-bottom: 12px;
-      font-weight: 500;
-      margin: 0;
-  
-      ion-spinner {
-        margin-left: 8px;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .profile-picture-section {
+      position: relative;
+      flex-shrink: 0;
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        cursor: pointer;
+        position: relative;
+        border: 3px solid var(--ion-color-primary);
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .camera-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+
+          ion-icon {
+            color: white;
+            font-size: 24px;
+          }
+        }
+
+        &:hover .camera-overlay {
+          opacity: 1;
+        }
+      }
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        color: var(--ion-text-color);
+      }
+
+      .profile-email {
+        color: var(--ion-color-medium);
+        font-size: 0.9rem;
+        margin: 0 0 8px 0;
+      }
+
+      .kyc-status-chip {
+        font-size: 0.8rem;
+        height: 28px;
       }
     }
   }
+
+  .completion-section {
+    padding: 12px;
+    background: rgba(var(--ion-color-warning-rgb), 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--ion-color-warning);
+
+    .completion-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--ion-color-warning-shade);
+      font-weight: 500;
+    }
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: var(--section-spacing);
+
+  ion-button {
+    flex: 1;
+    --border-radius: 8px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// Info Cards
+.info-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    padding-bottom: 8px;
+
+    ion-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+
+      ion-icon {
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  ion-card-content {
+    padding-top: 8px;
+  }
+}
+
+// Profile Items
+.profile-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+  --border-width: 0;
+  --background: transparent;
+  margin-bottom: 16px;
+
+  ion-label {
+    font-weight: 500;
+    font-size: 1.2rem;
+    padding-bottom: 20px;
+  }
+
+  ion-input, ion-textarea, ion-select, ion-datetime {
+    --background: var(--ion-color-light);
+    --border-radius: 8px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    border: 1px solid var(--ion-color-medium-tint);
+    border-radius: 8px;
+    font-size: 1rem;
+
+    &:focus-within {
+      border-color: var(--ion-color-primary);
+      box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+    }
+  }
+
+  ion-note {
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+}
+
+// Health Information
+.health-section {
+  margin-bottom: 20px;
+
+  .health-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--ion-text-color);
+    }
+  }
+
+  .chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 32px;
+    align-items: center;
+
+    ion-chip {
+      margin: 0;
+      font-size: 0.85rem;
+      position: relative;
+
+      .remove-chip-icon {
+        margin-left: 4px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .empty-state {
+      color: var(--ion-color-medium);
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Preferences Section
+.preferences-section {
+  margin-bottom: 24px;
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: var(--ion-text-color);
+  }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+
+    .checkbox-item {
+      --padding-start: 0;
+      --padding-end: 0;
+      --inner-padding-end: 0;
+      --inner-padding-start: 0;
+      --border-width: 0;
+      --background: transparent;
+      min-height: 40px;
+
+      ion-checkbox {
+        margin-right: 12px;
+        --size: 18px;
+      }
+
+      ion-label {
+        font-size: 0.9rem;
+        color: var(--ion-text-color);
+      }
+    }
+  }
+}
+
+// Save Section
+.save-section {
+  margin: var(--section-spacing) 0;
+
+  ion-button {
+    --border-radius: 8px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+// KYC Info Card
+.kyc-info-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .kyc-status-info {
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .status-label {
+        font-weight: 600;
+        color: var(--ion-text-color);
+      }
+    }
+
+    .status-description {
+      p {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 0;
+        padding: 12px;
+        border-radius: 8px;
+        background: rgba(var(--ion-color-light-rgb), 0.5);
+        line-height: 1.5;
+        font-size: 0.9rem;
+
+        ion-icon {
+          margin-top: 2px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+}
+
+// Bottom spacing
+.bottom-spacing {
+  height: 40px;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 12px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+
+    .profile-info {
+      order: 2;
+    }
+
+    .profile-picture-section {
+      order: 1;
+    }
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-card {
+    margin-bottom: 16px;
+  }
+}
+
+// Dark Mode Adjustments
+@media (prefers-color-scheme: dark) {
+  .profile-item {
+    ion-input, ion-textarea, ion-select, ion-datetime {
+      --background: var(--ion-color-step-50);
+      border-color: var(--ion-color-step-200);
+    }
+  }
+
+  .health-section {
+    .chips-container {
+      .empty-state {
+        color: var(--ion-color-step-400);
+      }
+    }
+  }
+
+  .completion-section {
+    background: rgba(var(--ion-color-warning-rgb), 0.15);
+  }
+
+  .kyc-status-info {
+    .status-description p {
+      background: rgba(var(--ion-color-step-100), 0.3);
+    }
+  }
+}
+
+// Loading States
+.profile-item {
+  &.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+// Animation for smooth transitions
+.profile-item,
+.health-section,
+.preferences-section {
+  transition: all 0.3s ease;
+}
+
+// Form validation styles
+.profile-item {
+  &.has-error {
+    ion-input, ion-textarea, ion-select {
+      border-color: var(--ion-color-danger);
+      
+      &:focus-within {
+        box-shadow: 0 0 0 2px rgba(var(--ion-color-danger-rgb), 0.2);
+      }
+    }
+  }
+}
+
+// Accessibility improvements
+.profile-avatar {
+  &:focus {
+    outline: 2px solid var(--ion-color-primary);
+    outline-offset: 2px;
+  }
+}
+
+ion-button {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.3);
+  }
+}
+
+.logo-section {
+  padding: 12px;
+  text-align: left;
+}

@@ -31,16 +31,17 @@ export class FirestoreService {
   // Add document with specific ID (useful for user profiles using UID)
   async addDocumentWithId(collectionName: string, documentId: string, data: any) {
     const docRef = doc(this.firestore, collectionName, documentId);
-    return await setDoc(docRef, data);
+    return await setDoc(docRef, data, { merge: true }); // Use merge to update existing fields
   }
 
-  // Get single document by ID
-  async getDocument(collectionName: string, documentId: string) {
+  // Get single document by ID with better type handling
+  async getDocument(collectionName: string, documentId: string): Promise<any | null> {
     const docRef = doc(this.firestore, collectionName, documentId);
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
+      const data = docSnap.data();
+      return { id: docSnap.id, ...data };
     } else {
       return null;
     }
@@ -105,9 +106,15 @@ export class FirestoreService {
     return await deleteDoc(docRef);
   }
 
-  // Get user by UID (helper method for user management)
-  async getUserByUid(uid: string) {
-    return await this.getDocument('users', uid);
+  // Get user by UID (helper method for user management) with better type handling
+  async getUserByUid(uid: string): Promise<any | null> {
+    try {
+      const userData = await this.getDocument('users', uid);
+      return userData;
+    } catch (error) {
+      console.error('Error getting user by UID:', error);
+      return null;
+    }
   }
 
   // Update user verification status (helper method)
@@ -121,5 +128,20 @@ export class FirestoreService {
   // Get users by type (helper method)
   getUsersByType(userType: string): Observable<any[]> {
     return this.getCollectionWithQuery('users', 'userType', '==', userType);
+  }
+
+  // Save user profile (specific helper method)
+  async saveUserProfile(uid: string, profileData: any) {
+    try {
+      await this.addDocumentWithId('users', uid, {
+        ...profileData,
+        updatedAt: new Date(),
+        createdAt: profileData.createdAt || new Date()
+      });
+      return true;
+    } catch (error) {
+      console.error('Error saving user profile:', error);
+      throw error;
+    }
   }
 }
