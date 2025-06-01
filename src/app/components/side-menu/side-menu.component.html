@@ -1,0 +1,102 @@
+<ion-menu contentId="main-content" type="overlay" side="start">
+    <!-- Menu Header -->
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>ReCare</ion-title>
+      </ion-toolbar>
+    </ion-header>
+  
+    <!-- Menu Content -->
+    <ion-content>
+      <!-- User Profile Section -->
+      <div class="user-profile-section">
+        <div class="profile-header">
+          <ion-avatar class="profile-avatar">
+            <img [src]="userProfile.profilePicture || '/assets/avatar-placeholder.jpg'" alt="Profile Picture">
+          </ion-avatar>
+          
+          <div class="profile-info">
+            <h3 class="user-name">{{ userProfile.fullName || 'Complete Profile' }}</h3>
+            <p class="user-email">{{ userProfile.email }}</p>
+            
+            <!-- KYC Status Badge -->
+            <ion-badge [color]="getKycStatusColor()" class="kyc-badge">
+              <ion-icon name="shield-checkmark-outline" *ngIf="userProfile.kycStatus === 'approved'"></ion-icon>
+              {{ getKycStatusText() }}
+            </ion-badge>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Main Navigation -->
+      <div class="menu-section">
+        <div class="section-header">
+          <h4>Main Menu</h4>
+        </div>
+        
+        <ion-list class="menu-list">
+          <ion-menu-toggle auto-hide="false" *ngFor="let page of appPages">
+            <ion-item 
+              button 
+              class="menu-item"
+              [class.disabled]="page.disabled"
+              (click)="navigateToPage(page)">
+              <ion-icon [name]="page.icon" slot="start" class="menu-icon"></ion-icon>
+              <ion-label>{{ page.title }}</ion-label>
+              <ion-badge 
+                *ngIf="page.badge && page.badge > 0" 
+                color="danger" 
+                slot="end">
+                {{ page.badge }}
+              </ion-badge>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </div>
+  
+      <!-- Secondary Navigation -->
+      <div class="menu-section">
+        <div class="section-header">
+          <h4>Account & Settings</h4>
+        </div>
+        
+        <ion-list class="menu-list">
+          <ion-menu-toggle auto-hide="false" *ngFor="let page of secondaryPages">
+            <ion-item 
+              button 
+              class="menu-item"
+              [class.disabled]="page.disabled"
+              (click)="navigateToPage(page)">
+              <ion-icon [name]="page.icon" slot="start" class="menu-icon"></ion-icon>
+              <ion-label>{{ page.title }}</ion-label>
+              <ion-badge 
+                *ngIf="page.badge && page.badge > 0" 
+                color="primary" 
+                slot="end">
+                {{ page.badge }}
+              </ion-badge>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </div>
+    </ion-content>
+  
+    <!-- Menu Footer -->
+    <ion-footer>
+      <div class="menu-footer">
+        <ion-button 
+          expand="block" 
+          fill="clear" 
+          color="danger"
+          class="logout-button"
+          (click)="logout()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Logout
+        </ion-button>
+        
+        <div class="app-version">
+          <p>ReCare v1.0.0</p>
+        </div>
+      </div>
+    </ion-footer>
+  </ion-menu>

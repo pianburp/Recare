@@ -25,13 +25,12 @@ import {
   IonCheckbox,
   IonAvatar,
   IonNote,
-  IonFab,
-  IonFabButton,
   IonGrid,
   IonRow,
   IonCol,
   IonChip,
-  IonBadge
+  IonBadge,
+  IonMenuButton  // This is the important addition
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -105,14 +104,16 @@ interface ElderlyProfile {
   styleUrls: ['./profile.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, 
+    IonContent, IonHeader, IonToolbar, IonButton, IonButtons, 
     IonIcon, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonItem, IonLabel, IonInput, IonTextarea, IonSelect, IonSelectOption,
-    IonDatetime, IonCheckbox, IonAvatar, IonNote, IonFab, IonFabButton,
+    IonDatetime, IonCheckbox, IonAvatar, IonNote,
     IonGrid, IonRow, IonCol, IonChip, IonBadge,
+    IonMenuButton,  // Add this line
     CommonModule, FormsModule
   ]
 })
+
 export class ProfilePage implements OnInit {
   isLoading: boolean = false;
   isEditing: boolean = false;
@@ -159,7 +160,7 @@ export class ProfilePage implements OnInit {
 
   // Options for dropdowns
   genderOptions = ['Male', 'Female', 'Prefer not to say'];
-  relationshipOptions = ['Spouse', 'Child', 'Sibling', 'Parent', 'Friend', 'Neighbor', 'Other'];
+  relationshipOptions = ['Spouse', 'Child', 'Sibling', 'Parent', 'Friend', 'Neighbour', 'Other'];
   mobilityOptions = ['Fully Mobile', 'Uses Walking Aid', 'Wheelchair User', 'Bedridden', 'Limited Mobility'];
   cognitiveOptions = ['Independent', 'Mild Cognitive Impairment', 'Moderate Cognitive Impairment', 'Severe Cognitive Impairment'];
   careTypeOptions = ['Companionship', 'Personal Care', 'Medical Care', 'Housekeeping', 'Meal Preparation', 'Transportation', 'Emergency Care'];
