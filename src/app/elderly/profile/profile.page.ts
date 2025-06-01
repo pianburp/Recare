@@ -29,8 +29,7 @@ import {
   IonRow,
   IonCol,
   IonChip,
-  IonBadge,
-  IonMenuButton  // This is the important addition
+  IonBadge
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -108,8 +107,7 @@ interface ElderlyProfile {
     IonIcon, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonItem, IonLabel, IonInput, IonTextarea, IonSelect, IonSelectOption,
     IonDatetime, IonCheckbox, IonAvatar, IonNote,
-    IonGrid, IonRow, IonCol, IonChip, IonBadge,
-    IonMenuButton,  // Add this line
+    IonGrid, IonRow, IonCol, IonChip, IonBadge,   
     CommonModule, FormsModule
   ]
 })
