@@ -60,5 +60,13 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/profile/profile.page').then( m => m.ProfilePage)
       }
     ]
+  },  {
+    path: 'history',
+    loadComponent: () => import('./elderly/history/history.page').then( m => m.HistoryPage)
+  },
+  {
+    path: 'notifications',
+    loadComponent: () => import('./elderly/notifications/notifications.page').then( m => m.NotificationsPage)
   }
+
 ];
