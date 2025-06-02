@@ -34,9 +34,18 @@ export const routes: Routes = [
         loadComponent: () => import('./elderly/home/home.page').then( m => m.HomePage)
       },
       {
-        path: 'review',
-        loadComponent: () => import('./elderly/review/review.page').then( m => m.ReviewPage)
+        path: 'notifications',
+        loadComponent: () => import('./elderly/notifications/notifications.page').then( m => m.NotificationsPage)
+      },
+      {
+        path: 'reward',
+        loadComponent: () => import('./elderly/reward/reward.page').then( m => m.RewardPage)
+      },
+      {
+        path: 'history',
+        loadComponent: () => import('./elderly/history/history.page').then( m => m.HistoryPage)
       }
+
     ]
   },
   {
@@ -60,13 +69,5 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/profile/profile.page').then( m => m.ProfilePage)
       }
     ]
-  },  {
-    path: 'history',
-    loadComponent: () => import('./elderly/history/history.page').then( m => m.HistoryPage)
-  },
-  {
-    path: 'notifications',
-    loadComponent: () => import('./elderly/notifications/notifications.page').then( m => m.NotificationsPage)
   }
-
 ];
