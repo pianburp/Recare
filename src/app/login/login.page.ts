@@ -168,22 +168,22 @@ export class LoginPage implements OnInit {
       console.error('Error fetching user data:', error);
       // Fallback: navigate to a default page if Firestore fails
       await this.showSuccessToast('Welcome back to ReCare!');
-      await this.router.navigate(['/elderly/profile']); // Default fallback
+      await this.router.navigate(['/elderly/home']); // Default fallback
     }
   }
 
   private async navigateBasedOnUserType(userType: string, fullName: string) {
     switch (userType) {
       case 'elderly':
-        await this.router.navigate(['/elderly/profile']);
+        await this.router.navigate(['/elderly/home']);
         break;
       case 'caregiver':
-        await this.router.navigate(['/caregiver/profile']);
+        await this.router.navigate(['/caregiver/home']);
         break;
       default:
         console.error('Unknown user type:', userType);
         // Fallback to elderly profile if user type is unknown
-        await this.router.navigate(['/elderly/profile']);
+        await this.router.navigate(['/elderly/home']);
         await this.showErrorToast('Unknown user type. Redirected to default page.');
         break;
     }
@@ -196,12 +196,12 @@ export class LoginPage implements OnInit {
         await this.navigateBasedOnUserType(userData.userType, userData.fullName);
       } else {
         // Fallback if user data not found
-        await this.router.navigate(['/elderly/profile']);
+        await this.router.navigate(['/elderly/home']);
       }
     } catch (error) {
       console.error('Error redirecting user:', error);
       // Fallback navigation
-      await this.router.navigate(['/elderly/profile']);
+      await this.router.navigate(['/elderly/home']);
     }
   }
 
