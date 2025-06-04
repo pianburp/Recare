@@ -5,6 +5,23 @@
   --section-spacing: 24px;
 }
 
+#main-content {
+  height: 100%;
+}
+
+.main-content-area {
+  --background: var(--ion-background-color);
+}
+
+.header-content {
+  display: flex;
+  
+  .header-logo {
+    height: 28px;
+    width: auto;
+  }
+}
+
 .profile-container {
   padding: var(--profile-spacing);
   max-width: 800px;

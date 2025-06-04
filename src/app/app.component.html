@@ -1,3 +1,6 @@
 <ion-app>
+  <!-- Include the sidemenu here for elderly users -->
+  <app-elderly-sidemenu *ngIf="showElderlySidemenu"></app-elderly-sidemenu>
+  
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

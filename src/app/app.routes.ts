@@ -44,6 +44,14 @@ export const routes: Routes = [
       {
         path: 'history',
         loadComponent: () => import('./elderly/history/history.page').then( m => m.HistoryPage)
+      },
+      {
+        path: 'book-care',
+        loadComponent: () => import('./elderly/book-care/book-care.page').then( m => m.BookCarePage)
+      },
+      {
+        path: 'schedule',
+        loadComponent: () => import('./elderly/schedule/schedule.page').then( m => m.SchedulePage)
       }
 
     ]
@@ -67,6 +75,10 @@ export const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () => import('./admin/profile/profile.page').then( m => m.ProfilePage)
+      },
+      {
+        path: 'home',
+        loadComponent: () => import('./admin/home/home.page').then( m => m.HomePage)
       }
     ]
   }

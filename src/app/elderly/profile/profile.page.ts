@@ -29,7 +29,8 @@ import {
   IonRow,
   IonCol,
   IonChip,
-  IonBadge
+  IonBadge,
+  IonMenuButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -108,7 +109,8 @@ interface ElderlyProfile {
     IonItem, IonLabel, IonInput, IonTextarea, IonSelect, IonSelectOption,
     IonDatetime, IonCheckbox, IonAvatar, IonNote,
     IonGrid, IonRow, IonCol, IonChip, IonBadge,   
-    CommonModule, FormsModule
+    CommonModule, FormsModule,
+    IonMenuButton,IonTitle
   ]
 })
 
@@ -191,12 +193,6 @@ export class ProfilePage implements OnInit {
   }
 
   async loadProfile() {
-    const loading = await this.loadingController.create({
-      message: 'Loading profile...',
-      spinner: 'crescent'
-    });
-    await loading.present();
-
     try {
       // Get current user from auth
       this.authService.user$.subscribe(async (user) => {
@@ -204,7 +200,7 @@ export class ProfilePage implements OnInit {
           this.currentUser = user;
           this.profile.email = user.email || '';
           this.profile.uid = user.uid;
-
+  
           try {
             // Try to load profile from Firestore
             const userData = await this.firestoreService.getUserByUid(user.uid);
@@ -222,7 +218,6 @@ export class ProfilePage implements OnInit {
                 allergies: firestoreProfile.allergies || [],
                 languagePreferences: firestoreProfile.languagePreferences || []
               };
-              console.log('Profile loaded from Firestore:', this.profile);
             } else {
               // No profile in Firestore, check localStorage as fallback
               const savedProfile = localStorage.getItem(`elderlyProfile_${user.uid}`);
@@ -255,8 +250,6 @@ export class ProfilePage implements OnInit {
     } catch (error) {
       console.error('Error in loadProfile:', error);
       await this.showErrorToast('Failed to load profile');
-    } finally {
-      await loading.dismiss();
     }
   }
 

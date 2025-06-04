@@ -32,7 +32,7 @@ import {
   callOutline, checkmarkCircle, calendar } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from '../../services/firestore.service';
-import { ElderlySidemenuComponent } from '../../components/elderly-sidemenu/elderly-sidemenu.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -58,8 +58,7 @@ import { ElderlySidemenuComponent } from '../../components/elderly-sidemenu/elde
     IonChip,
     IonLabel,
     CommonModule, 
-    FormsModule,
-    ElderlySidemenuComponent
+    FormsModule
   ]
 })
 export class HomePage implements OnInit {
@@ -105,6 +104,7 @@ export class HomePage implements OnInit {
   private authService = inject(AuthService);
   private firestoreService = inject(FirestoreService);
   private menuController = inject(MenuController);
+  private router = inject(Router);
 
   constructor() {
     addIcons({calendarOutline,peopleOutline,heartOutline,starOutline,checkmarkCircle,calendar,menuOutline,medicalOutline,callOutline});
@@ -140,8 +140,7 @@ export class HomePage implements OnInit {
       // You can implement emergency call functionality here
     } else if (action.route) {
       // Navigate to the route
-      console.log('Navigate to:', action.route);
-      // Implement navigation when routes are available
+      this.router.navigate([action.route])
     }
   }
 
