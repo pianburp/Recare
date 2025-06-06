@@ -25,12 +25,16 @@ import {
 import { addIcons } from 'ionicons';
 import { 
   personOutline, 
-  timeOutline, 
+  calendarOutline, 
   notificationsOutline, 
-  giftOutline, 
+  walletOutline, 
   logOutOutline,
   homeOutline,
-  chevronForwardOutline
+  chevronForwardOutline,
+  peopleOutline,
+  statsChartOutline,
+  settingsOutline,
+  starOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from '../../services/firestore.service';
@@ -42,9 +46,9 @@ interface UserProfile {
 }
 
 @Component({
-  selector: 'app-elderly-sidemenu',
-  templateUrl: './elderly-sidemenu.component.html',
-  styleUrls: ['./elderly-sidemenu.component.scss'],
+  selector: 'app-caregiver-sidemenu',
+  templateUrl: './caregiver-sidemenu.component.html',
+  styleUrls: ['./caregiver-sidemenu.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -66,7 +70,7 @@ interface UserProfile {
     IonSpinner
   ]
 })
-export class ElderlySidemenuComponent implements OnInit {
+export class CaregiverSidemenuComponent implements OnInit {
   userProfile: UserProfile = {
     fullName: 'Loading...',
     email: '',
@@ -78,35 +82,42 @@ export class ElderlySidemenuComponent implements OnInit {
 
   menuItems = [
     {
-      title: 'Home',
-      url: '/elderly/home',
+      title: 'Dashboard',
+      url: '/caregiver/home',
       icon: 'home-outline',
       color: 'primary'
     },
     {
       title: 'My Profile',
-      url: '/elderly/profile',
+      url: '/caregiver/profile',
       icon: 'person-outline',
       color: 'primary'
     },
     {
-      title: 'Care History',
-      url: '/elderly/history',
-      icon: 'time-outline',
+      title: 'Schedule',
+      url: '/caregiver/schedule',
+      icon: 'calendar-outline',
+      color: 'secondary'
+    },
+    {
+      title: 'My Clients',
+      url: '/caregiver/clients',
+      icon: 'people-outline',
       color: 'tertiary'
     },
     {
-      title: 'Notifications',
-      url: '/elderly/notifications',
-      icon: 'notifications-outline',
-      color: 'warning',
-      badge: 0
+      title: 'Analytics',
+      url: '/caregiver/analytics',
+      icon: 'stats-chart-outline',
+      color: 'success',
+      description: 'Earnings, Reviews & Performance'
     },
     {
-      title: 'Rewards',
-      url: '/elderly/reward',
-      icon: 'gift-outline',
-      color: 'success'
+      title: 'Notifications',
+      url: '/caregiver/notifications',
+      icon: 'notifications-outline',
+      color: 'warning',
+      badge: 0 // You can update this dynamically
     }
   ];
 
@@ -119,14 +130,19 @@ export class ElderlySidemenuComponent implements OnInit {
   private alertController = inject(AlertController);
 
   constructor() {
+    // Register icons
     addIcons({ 
       personOutline, 
-      timeOutline, 
+      calendarOutline, 
       notificationsOutline, 
-      giftOutline, 
+      walletOutline, 
       logOutOutline,
       homeOutline,
-      chevronForwardOutline
+      chevronForwardOutline,
+      peopleOutline,
+      statsChartOutline,
+      settingsOutline,
+      starOutline
     });
   }
 
@@ -141,21 +157,23 @@ export class ElderlySidemenuComponent implements OnInit {
           const userData = await this.firestoreService.getUserByUid(user.uid);
           if (userData) {
             this.userProfile = {
-              fullName: userData.fullName || 'User',
+              fullName: userData.fullName || 'Caregiver',
               email: userData.email || user.email || '',
               profilePicture: userData.profilePicture || '/assets/avatar-placeholder.jpg'
             };
           } else {
+            // Fallback to auth data if Firestore data not found
             this.userProfile = {
-              fullName: user.displayName || 'User',
+              fullName: user.displayName || 'Caregiver',
               email: user.email || '',
               profilePicture: user.photoURL || '/assets/avatar-placeholder.jpg'
             };
           }
         } catch (error) {
           console.error('Error loading user profile:', error);
+          // Use auth data as fallback
           this.userProfile = {
-            fullName: user.displayName || 'User',
+            fullName: user.displayName || 'Caregiver',
             email: user.email || '',
             profilePicture: user.photoURL || '/assets/avatar-placeholder.jpg'
           };
@@ -196,25 +214,32 @@ export class ElderlySidemenuComponent implements OnInit {
     try {
       this.isLoading = true;
       
+      // Close the menu first
       await this.menuController.close();
       
+      // Sign out from auth service
       await this.authService.signOut();
       
+      // Dismiss loading immediately after signOut
       await loading.dismiss();
       
+      // Show success toast
       await this.showSuccessToast('Logged out successfully');
       
+      // Navigate to login page
       await this.router.navigate(['/login']);
       
     } catch (error: any) {
       console.error('Logout error:', error);
-      await loading.dismiss();
+      await loading.dismiss(); // Make sure to dismiss loading on error
       await this.showErrorToast('Failed to logout. Please try again.');
     } finally {
       this.isLoading = false;
+      // Ensure loading is dismissed in case it wasn't already
       try {
         await loading.dismiss();
       } catch (dismissError) {
+        // Loading might already be dismissed, ignore this error
         console.log('Loading controller already dismissed');
       }
     }

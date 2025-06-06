@@ -52,7 +52,11 @@ export const routes: Routes = [
       {
         path: 'schedule',
         loadComponent: () => import('./elderly/schedule/schedule.page').then( m => m.SchedulePage)
-      }
+      },
+      {
+        path: 'kyc',
+        loadComponent: () => import('./elderly/kyc/kyc.page').then( m => m.KycPage)
+      },
 
     ]
   },
@@ -67,6 +71,10 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./caregiver/home/home.page').then( m => m.HomePage)
       },
+      {
+        path: 'kyc',
+        loadComponent: () => import('./caregiver/kyc/kyc.page').then( m => m.KycPage)
+      }
     ]
   },
   {
@@ -81,5 +89,20 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/home/home.page').then( m => m.HomePage)
       }
     ]
-  }
+  },  {
+    path: 'analytics',
+    loadComponent: () => import('./caregiver/analytics/analytics.page').then( m => m.AnalyticsPage)
+  },
+  {
+    path: 'notifications',
+    loadComponent: () => import('./caregiver/notifications/notifications.page').then( m => m.NotificationsPage)
+  },
+  {
+    path: 'schedule',
+    loadComponent: () => import('./caregiver/schedule/schedule.page').then( m => m.SchedulePage)
+  },
+
+  
+  
+
 ];

@@ -209,16 +209,7 @@ export class LoginPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Email Not Verified',
       message: `
-        <div style="text-align: center;">
-          <p><strong>Please verify your email address</strong></p>
-          <p>We sent a verification email to:</p>
-          <p><strong>${user.email}</strong></p>
-          <br>
-          <p>Click the link in the email to verify your account before signing in.</p>
-          <p style="font-size: 0.9em; color: #666; margin-top: 12px;">
-            <em>Don't forget to check your spam folder if you don't see the email.</em>
-          </p>
-        </div>
+        Please verify your email address on ${user.email}
       `,
       buttons: [
         {

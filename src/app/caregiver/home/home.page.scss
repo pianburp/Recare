@@ -1,0 +1,709 @@
+:host {
+    --caregiver-primary: #2E8B57; // Sea green
+    --caregiver-secondary: #4682B4; // Steel blue
+    --caregiver-accent: #20B2AA; // Light sea green
+  }
+  
+  #main-content {
+    height: 100%;
+  }
+  
+  .main-content-area {
+    --background: var(--ion-background-color);
+  }
+  
+  .header-content {
+    display: flex;
+    
+    .header-logo {
+      height: 28px;
+      width: auto;
+    }
+  }
+  
+  // Welcome Section with Professional Badge
+  .welcome-section {
+    padding: 24px 20px;
+    background: linear-gradient(135deg, 
+      rgba(46, 139, 87, 0.1) 0%, 
+      rgba(46, 139, 87, 0.02) 100%);
+    text-align: center;
+    border-bottom: 1px solid var(--ion-border-color);
+  
+    .greeting {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--ion-text-color);
+      margin: 0 0 8px 0;
+      background: linear-gradient(135deg, var(--caregiver-primary) 0%, var(--caregiver-secondary) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .date {
+      font-size: 1rem;
+      color: var(--ion-color-medium);
+      margin: 0 0 12px 0;
+    }
+  
+    .professional-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(46, 139, 87, 0.1);
+      border: 1px solid rgba(46, 139, 87, 0.3);
+      border-radius: 16px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      color: var(--caregiver-primary);
+      font-weight: 600;
+  
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  // Enhanced Stats Section
+  .stats-section {
+    padding: 16px 8px;
+  
+    .stat-card {
+      --border-radius: 16px;
+      margin: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+  
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--accent-color, var(--ion-color-primary));
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+  
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+        &::before {
+          transform: translateX(0);
+        }
+      }
+  
+      &.primary-stat {
+        --accent-color: var(--ion-color-primary);
+      }
+  
+      &.success-stat {
+        --accent-color: var(--ion-color-success);
+      }
+  
+      &.earnings-stat {
+        --accent-color: var(--ion-color-warning);
+      }
+  
+      &.rating-stat {
+        --accent-color: #FFD700; // Gold for ratings
+      }
+  
+      ion-card-content {
+        padding: 16px;
+        text-align: center;
+  
+        .stat-icon {
+          margin-bottom: 8px;
+  
+          ion-icon {
+            font-size: 2rem;
+          }
+        }
+  
+        .stat-value {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: var(--ion-text-color);
+          margin: 4px 0;
+        }
+  
+        .stat-label {
+          font-size: 0.85rem;
+          color: var(--ion-color-medium);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 4px;
+        }
+  
+        .stat-trend {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          font-size: 0.75rem;
+          color: var(--ion-color-success);
+          font-weight: 600;
+  
+          ion-icon {
+            font-size: 0.9rem;
+          }
+        }
+  
+        .stat-subtitle {
+          font-size: 0.7rem;
+          color: var(--ion-color-medium);
+          margin-top: 2px;
+        }
+      }
+    }
+  }
+  
+  // Section Headers
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    margin-bottom: 12px;
+  
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+      margin: 0;
+    }
+  
+    ion-button {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  // Schedule Preview Section
+  .schedule-preview-section {
+    padding: 16px;
+  
+    .schedule-card {
+      --border-radius: 12px;
+      margin: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+      .schedule-item {
+        display: flex;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(var(--ion-border-color), 0.5);
+  
+        &:last-child {
+          border-bottom: none;
+        }
+  
+        .schedule-time {
+          min-width: 80px;
+          text-align: center;
+          margin-right: 16px;
+  
+          .time {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--caregiver-primary);
+          }
+  
+          .duration {
+            font-size: 0.75rem;
+            color: var(--ion-color-medium);
+          }
+        }
+  
+        .schedule-details {
+          flex: 1;
+  
+          .client-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ion-text-color);
+            margin: 0 0 4px 0;
+          }
+  
+          .service-type {
+            font-size: 0.85rem;
+            color: var(--ion-color-medium);
+            margin: 0;
+          }
+        }
+  
+        .schedule-status {
+          margin-left: 12px;
+        }
+      }
+  
+      .empty-schedule {
+        text-align: center;
+        padding: 32px 16px;
+        color: var(--ion-color-medium);
+  
+        ion-icon {
+          font-size: 3rem;
+          margin-bottom: 12px;
+        }
+  
+        p {
+          margin: 0;
+          font-style: italic;
+        }
+      }
+    }
+  }
+  
+  // Enhanced Quick Actions
+  .quick-actions-section {
+    padding: 16px;
+  
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+      margin: 0 0 16px 8px;
+    }
+  
+    .action-card {
+      --border-radius: 12px;
+      margin: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      height: 100%;
+  
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+  
+      &:active {
+        transform: translateY(-1px);
+        transition-duration: 0.1s;
+      }
+  
+      ion-card-content {
+        padding: 20px;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+  
+        .action-header {
+          margin-bottom: 12px;
+  
+          .action-icon {
+            font-size: 2.5rem;
+          }
+        }
+  
+        .action-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--ion-text-color);
+          margin: 0 0 8px 0;
+        }
+  
+        .action-description {
+          font-size: 0.8rem;
+          color: var(--ion-color-medium);
+          margin: 0;
+          line-height: 1.3;
+        }
+      }
+    }
+  }
+  
+  // Activity Section
+  .activity-section {
+    padding: 16px;
+  
+    .activity-card {
+      --border-radius: 12px;
+      margin: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+      .activity-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(var(--ion-border-color), 0.5);
+  
+        &:last-child {
+          border-bottom: none;
+        }
+  
+        .activity-icon {
+          margin-right: 16px;
+          padding-top: 2px;
+  
+          ion-icon {
+            font-size: 1.5rem;
+          }
+        }
+  
+        .activity-content {
+          flex: 1;
+  
+          .activity-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--ion-text-color);
+            margin: 0 0 4px 0;
+          }
+  
+          .activity-details {
+            font-size: 0.85rem;
+            color: var(--ion-color-medium);
+            margin: 0 0 4px 0;
+            line-height: 1.3;
+          }
+  
+          .activity-time {
+            font-size: 0.75rem;
+            color: var(--ion-color-medium);
+            font-style: italic;
+          }
+        }
+      }
+  
+      .empty-activity {
+        text-align: center;
+        padding: 32px 16px;
+        color: var(--ion-color-medium);
+  
+        ion-icon {
+          font-size: 3rem;
+          margin-bottom: 12px;
+        }
+  
+        p {
+          margin: 0;
+          font-style: italic;
+        }
+      }
+    }
+  }
+  
+  // Performance Section
+  .performance-section {
+    padding: 16px;
+    padding-bottom: 32px;
+  
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+      margin: 0 0 16px 8px;
+    }
+  
+    .performance-card {
+      --border-radius: 12px;
+      margin: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+      .performance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+  
+        .performance-item {
+          text-align: center;
+          padding: 12px 8px;
+          border-radius: 8px;
+          background: rgba(var(--caregiver-primary), 0.05);
+  
+          .performance-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--caregiver-primary);
+            margin-bottom: 4px;
+          }
+  
+          .performance-label {
+            font-size: 0.8rem;
+            color: var(--ion-color-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+      }
+  
+      .analytics-button {
+        --border-radius: 8px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  // Responsive Design
+  @media (max-width: 768px) {
+    .welcome-section {
+      padding: 20px 16px;
+  
+      .greeting {
+        font-size: 1.5rem;
+      }
+  
+      .date {
+        font-size: 0.9rem;
+      }
+  
+      .professional-badge {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+      }
+    }
+  
+    .stats-section {
+      .stat-card {
+        margin: 4px;
+  
+        ion-card-content {
+          padding: 12px;
+  
+          .stat-icon ion-icon {
+            font-size: 1.8rem;
+          }
+  
+          .stat-value {
+            font-size: 1.5rem;
+          }
+  
+          .stat-label {
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+  
+    .schedule-preview-section {
+      .schedule-item {
+        padding: 12px 0;
+  
+        .schedule-time {
+          min-width: 70px;
+          margin-right: 12px;
+  
+          .time {
+            font-size: 0.85rem;
+          }
+  
+          .duration {
+            font-size: 0.7rem;
+          }
+        }
+  
+        .schedule-details {
+          .client-name {
+            font-size: 0.9rem;
+          }
+  
+          .service-type {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+  
+    .quick-actions-section {
+      .action-card {
+        margin: 4px;
+  
+        ion-card-content {
+          padding: 16px;
+  
+          .action-header .action-icon {
+            font-size: 2rem;
+          }
+  
+          .action-title {
+            font-size: 0.9rem;
+          }
+  
+          .action-description {
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+  
+    .activity-section {
+      .activity-item {
+        padding: 12px 0;
+  
+        .activity-icon {
+          margin-right: 12px;
+  
+          ion-icon {
+            font-size: 1.3rem;
+          }
+        }
+  
+        .activity-content {
+          .activity-title {
+            font-size: 0.9rem;
+          }
+  
+          .activity-details {
+            font-size: 0.8rem;
+          }
+  
+          .activity-time {
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  
+    .performance-section {
+      .performance-grid {
+        gap: 12px;
+  
+        .performance-item {
+          padding: 10px 6px;
+  
+          .performance-value {
+            font-size: 1.2rem;
+          }
+  
+          .performance-label {
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+  }
+  
+  // Dark Mode Adjustments
+  @media (prefers-color-scheme: dark) {
+    .welcome-section {
+      background: linear-gradient(135deg, 
+        rgba(46, 139, 87, 0.15) 0%, 
+        rgba(46, 139, 87, 0.05) 100%);
+  
+      .professional-badge {
+        background: rgba(46, 139, 87, 0.2);
+        border-color: rgba(46, 139, 87, 0.4);
+      }
+    }
+  
+    .stat-card,
+    .action-card,
+    .schedule-card,
+    .activity-card,
+    .performance-card {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  
+      &:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      }
+    }
+  
+    .schedule-item,
+    .activity-item {
+      &:not(:last-child) {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  
+    .performance-grid {
+      .performance-item {
+        background: rgba(46, 139, 87, 0.1);
+      }
+    }
+  }
+  
+  // Professional theme enhancements
+  .main-content-area {
+    .section-title {
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background: linear-gradient(135deg, var(--caregiver-primary), var(--caregiver-secondary));
+        border-radius: 1px;
+      }
+    }
+  }
+  
+  // Enhanced hover effects for professional cards
+  .stat-card,
+  .action-card {
+    &:hover {
+      .stat-value,
+      .action-title {
+        color: var(--caregiver-primary);
+        transition: color 0.3s ease;
+      }
+    }
+  }
+  
+  // Badge animations
+  .professional-badge {
+    animation: subtle-pulse 3s infinite;
+  }
+  
+  @keyframes subtle-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+  }
+  
+  // Loading states for dynamic content
+  .schedule-item,
+  .activity-item {
+    &.loading {
+      opacity: 0.6;
+      animation: loading-shimmer 1.5s infinite;
+    }
+  }
+  
+  @keyframes loading-shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+  
+  // Accessibility improvements
+  .stat-card,
+  .action-card {
+    &:focus {
+      outline: 2px solid var(--caregiver-primary);
+      outline-offset: 2px;
+    }
+  }
+  
+  ion-button {
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(var(--caregiver-primary), 0.3);
+    }
+  }

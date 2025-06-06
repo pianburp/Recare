@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { ElderlySidemenuComponent } from './components/elderly-sidemenu/elderly-sidemenu.component';
+import { CaregiverSidemenuComponent } from './components/caregiver-sidemenu/caregiver-sidemenu.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
@@ -14,11 +15,14 @@ import { FirestoreService } from './services/firestore.service';
     IonApp, 
     IonRouterOutlet, 
     ElderlySidemenuComponent,
+    CaregiverSidemenuComponent,
     CommonModule
   ]
 })
 export class AppComponent implements OnInit {
   showElderlySidemenu = false;
+  showCaregiverSidemenu = false;
+  currentUserType: string | null = null;
 
   private router = inject(Router);
   private authService = inject(AuthService);
@@ -39,23 +43,36 @@ export class AppComponent implements OnInit {
       if (user) {
         try {
           const userData = await this.firestoreService.getUserByUid(user.uid);
-          if (userData && userData.userType === 'elderly') {
+          if (userData && userData.userType) {
+            this.currentUserType = userData.userType;
             this.checkSidemenuVisibility(this.router.url);
           } else {
-            this.showElderlySidemenu = false;
+            this.hideAllSidemenus();
           }
         } catch (error) {
           console.error('Error checking user type:', error);
-          this.showElderlySidemenu = false;
+          this.hideAllSidemenus();
         }
       } else {
-        this.showElderlySidemenu = false;
+        this.hideAllSidemenus();
       }
     });
   }
 
   private checkSidemenuVisibility(url: string) {
-    // Show sidemenu only for elderly routes
-    this.showElderlySidemenu = url.startsWith('/elderly');
+    // Hide all sidemenus first
+    this.hideAllSidemenus();
+
+    // Show appropriate sidemenu based on route and user type
+    if (url.startsWith('/elderly') && this.currentUserType === 'elderly') {
+      this.showElderlySidemenu = true;
+    } else if (url.startsWith('/caregiver') && this.currentUserType === 'caregiver') {
+      this.showCaregiverSidemenu = true;
+    }
+  }
+
+  private hideAllSidemenus() {
+    this.showElderlySidemenu = false;
+    this.showCaregiverSidemenu = false;
   }
 }

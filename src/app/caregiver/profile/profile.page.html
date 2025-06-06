@@ -1,13 +1,743 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<div class="ion-page" id="main-content">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        <div class="header-content">
+          <img src="../../assets/logo.svg" alt="ReCare Logo" class="header-logo">
+        </div>
+      </ion-title>
     </ion-toolbar>
   </ion-header>
-</ion-content>
+
+  <ion-content [fullscreen]="true" class="main-content-area">
+    <div class="profile-container">
+      <!-- Profile Header Card -->
+      <ion-card class="profile-header-card">
+        <ion-card-content>
+          <div class="profile-header">
+            <div class="profile-picture-section">
+              <ion-avatar class="profile-avatar" (click)="selectProfilePicture()">
+                <img [src]="profile.profilePicture || '/assets/avatar-placeholder.jpg'" alt="Profile Picture">
+                <div class="camera-overlay">
+                  <ion-icon name="camera-outline"></ion-icon>
+                </div>
+              </ion-avatar>
+            </div>
+            
+            <div class="profile-info">
+              <h2>{{ profile.fullName || 'Complete your profile' }}</h2>
+              <p class="profile-email">{{ profile.email }}</p>
+              
+              <!-- KYC Status Badge -->
+              <ion-chip [color]="getKycStatusColor()" class="kyc-status-chip">
+                <ion-icon name="shield-checkmark-outline" *ngIf="profile.kycStatus === 'approved'"></ion-icon>
+                <ion-icon name="alert-circle-outline" *ngIf="profile.kycStatus === 'rejected'"></ion-icon>
+                <ion-icon name="information-circle-outline" *ngIf="profile.kycStatus !== 'approved' && profile.kycStatus !== 'rejected'"></ion-icon>
+                <ion-label>{{ getKycStatusText() }}</ion-label>
+              </ion-chip>
+            </div>
+          </div>
+          
+          <!-- Profile Completion Progress -->
+          <div class="completion-section" *ngIf="!profile.isProfileComplete">
+            <div class="completion-header">
+              <ion-icon name="information-circle-outline" color="warning"></ion-icon>
+              <span>Complete your profile to submit KYC and start receiving care requests</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons" *ngIf="profile.kycStatus !== 'submitted'">
+        <ion-button 
+          expand="block" 
+          fill="outline" 
+          (click)="isEditing = !isEditing"
+          [disabled]="isLoading">
+          <ion-icon [name]="isEditing ? 'close-outline' : 'create-outline'" slot="start"></ion-icon>
+          {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+        </ion-button>
+        
+        <ion-button 
+          expand="block" 
+          color="success"
+          (click)="submitKyc()"
+          [disabled]="!profile.isProfileComplete || isLoading"
+          *ngIf="profile.kycStatus === 'pending'">
+          <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
+          Submit KYC Application
+        </ion-button>
+      </div>
+
+      <!-- Personal Information Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="person-outline"></ion-icon>
+            Personal Information
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Full Name *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.fullName"
+                    placeholder="Enter your full name"
+                    [readonly]="!isEditing"
+                    (ionBlur)="validateForm()">
+                  </ion-input>
+                  <ion-note slot="error" *ngIf="profileForm.errors.fullName && isEditing">
+                    {{ profileForm.errors.fullName }}
+                  </ion-note>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Date of Birth *</ion-label>
+                  <ion-datetime 
+                    [(ngModel)]="profile.dateOfBirth"
+                    presentation="date"
+                    [readonly]="!isEditing"
+                    max="2006-12-31"
+                    placeholder="Select your birth date">
+                  </ion-datetime>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Gender</ion-label>
+                  <ion-select 
+                    [(ngModel)]="profile.gender"
+                    placeholder="Select gender"
+                    [disabled]="!isEditing">
+                    <ion-select-option *ngFor="let gender of genderOptions" [value]="gender">
+                      {{ gender }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Phone Number *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.phoneNumber"
+                    type="tel"
+                    placeholder="+60 12-345 6789"
+                    [readonly]="!isEditing"
+                    (ionBlur)="validateForm()">
+                  </ion-input>
+                  <ion-note slot="error" *ngIf="profileForm.errors.phoneNumber && isEditing">
+                    {{ profileForm.errors.phoneNumber }}
+                  </ion-note>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Email Address</ion-label>
+                  <ion-input 
+                    [value]="profile.email"
+                    type="email"
+                    readonly="true">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Address Information Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="location-outline"></ion-icon>
+            Address Information
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Home Address *</ion-label>
+                  <ion-textarea 
+                    [(ngModel)]="profile.address"
+                    placeholder="Enter your complete address"
+                    [readonly]="!isEditing"
+                    rows="3"
+                    (ionBlur)="validateForm()">
+                  </ion-textarea>
+                  <ion-note slot="error" *ngIf="profileForm.errors.address && isEditing">
+                    {{ profileForm.errors.address }}
+                  </ion-note>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">City *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.city"
+                    placeholder="Enter city"
+                    [readonly]="!isEditing">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">State *</ion-label>
+                  <ion-select 
+                    [(ngModel)]="profile.state"
+                    placeholder="Select state"
+                    [disabled]="!isEditing">
+                    <ion-select-option *ngFor="let state of malaysianStates" [value]="state">
+                      {{ state }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Postal Code</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.postalCode"
+                    placeholder="12345"
+                    [readonly]="!isEditing">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Country</ion-label>
+                  <ion-input 
+                    [value]="profile.country"
+                    readonly="true">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Emergency Contact Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="call-outline"></ion-icon>
+            Emergency Contact
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Contact Name *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.emergencyContactName"
+                    placeholder="Enter contact name"
+                    [readonly]="!isEditing"
+                    (ionBlur)="validateForm()">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Contact Phone *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.emergencyContactPhone"
+                    type="tel"
+                    placeholder="+60 12-345 6789"
+                    [readonly]="!isEditing"
+                    (ionBlur)="validateForm()">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Relationship *</ion-label>
+                  <ion-select 
+                    [(ngModel)]="profile.emergencyContactRelationship"
+                    placeholder="Select relationship"
+                    [disabled]="!isEditing">
+                    <ion-select-option *ngFor="let relationship of relationshipOptions" [value]="relationship">
+                      {{ relationship }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          
+          <ion-note color="danger" *ngIf="profileForm.errors.emergencyContact && isEditing">
+            {{ profileForm.errors.emergencyContact }}
+          </ion-note>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Professional Information Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="school-outline"></ion-icon>
+            Professional Information
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">License Number *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.licenseNumber"
+                    placeholder="Enter your healthcare license number"
+                    [readonly]="!isEditing"
+                    (ionBlur)="validateForm()">
+                  </ion-input>
+                  <ion-note slot="error" *ngIf="profileForm.errors.licenseNumber && isEditing">
+                    {{ profileForm.errors.licenseNumber }}
+                  </ion-note>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Years of Experience</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.yearsOfExperience"
+                    type="number"
+                    min="0"
+                    max="50"
+                    placeholder="0"
+                    [readonly]="!isEditing">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Education *</ion-label>
+                  <ion-select 
+                    [(ngModel)]="profile.education"
+                    placeholder="Select your highest education"
+                    [disabled]="!isEditing">
+                    <ion-select-option *ngFor="let education of educationOptions" [value]="education">
+                      {{ education }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12">
+                <div class="professional-section">
+                  <div class="professional-header">
+                    <h4>Certifications</h4>
+                    <ion-button 
+                      fill="clear" 
+                      size="small" 
+                      (click)="addCertification()"
+                      *ngIf="isEditing">
+                      Add
+                    </ion-button>
+                  </div>
+                  <div class="chips-container">
+                    <ion-chip *ngFor="let certification of profile.certifications" color="primary">
+                      <ion-label>{{ certification }}</ion-label>
+                      <ion-icon 
+                        name="close-outline" 
+                        *ngIf="isEditing"
+                        (click)="removeCertification(certification)"
+                        class="remove-chip-icon">
+                      </ion-icon>
+                    </ion-chip>
+                    <div *ngIf="profile.certifications.length === 0" class="empty-state">
+                      No certifications added
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Service Information Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="medical-outline"></ion-icon>
+            Service Information
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Hourly Rate (RM) *</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.hourlyRate"
+                    type="number"
+                    min="10"
+                    max="500"
+                    placeholder="50"
+                    [readonly]="!isEditing"
+                    (ionBlur)="validateForm()">
+                  </ion-input>
+                  <ion-note slot="error" *ngIf="profileForm.errors.hourlyRate && isEditing">
+                    {{ profileForm.errors.hourlyRate }}
+                  </ion-note>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Travel Radius (km)</ion-label>
+                  <ion-range 
+                    [(ngModel)]="profile.travelRadius"
+                    min="1"
+                    max="50"
+                    step="1"
+                    [disabled]="!isEditing"
+                    snaps="true"
+                    ticks="true">
+                    <ion-label slot="start">1</ion-label>
+                    <ion-label slot="end">50</ion-label>
+                  </ion-range>
+                  <p class="range-value">{{ profile.travelRadius }} km</p>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12">
+                <div class="preferences-section">
+                  <h4>Specializations</h4>
+                  <div class="checkbox-grid">
+                    <ion-item *ngFor="let specialization of specializationOptions" class="checkbox-item">
+                      <ion-checkbox 
+                        slot="start" 
+                        [checked]="profile.specializations.includes(specialization)"
+                        (ionChange)="toggleSpecialization(specialization)"
+                        [disabled]="!isEditing">
+                      </ion-checkbox>
+                      <ion-label>{{ specialization }}</ion-label>
+                    </ion-item>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12">
+                <div class="preferences-section">
+                  <h4>Service Types *</h4>
+                  <div class="checkbox-grid">
+                    <ion-item *ngFor="let serviceType of serviceTypeOptions" class="checkbox-item">
+                      <ion-checkbox 
+                        slot="start" 
+                        [checked]="profile.serviceTypes.includes(serviceType)"
+                        (ionChange)="toggleServiceType(serviceType)"
+                        [disabled]="!isEditing">
+                      </ion-checkbox>
+                      <ion-label>{{ serviceType }}</ion-label>
+                    </ion-item>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12">
+                <div class="preferences-section">
+                  <h4>Available Hours *</h4>
+                  <div class="checkbox-grid">
+                    <ion-item *ngFor="let timeSlot of timeSlotOptions" class="checkbox-item">
+                      <ion-checkbox 
+                        slot="start" 
+                        [checked]="profile.availableHours.includes(timeSlot)"
+                        (ionChange)="toggleAvailableHour(timeSlot)"
+                        [disabled]="!isEditing">
+                      </ion-checkbox>
+                      <ion-label>{{ timeSlot }}</ion-label>
+                    </ion-item>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Health & Safety Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            Health & Safety
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">COVID-19 Vaccination Status</ion-label>
+                  <ion-select 
+                    [(ngModel)]="profile.vaccinationStatus"
+                    placeholder="Select vaccination status"
+                    [disabled]="!isEditing">
+                    <ion-select-option *ngFor="let status of vaccinationOptions" [value]="status">
+                      {{ status }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Background Check Date</ion-label>
+                  <ion-datetime 
+                    [(ngModel)]="profile.backgroundCheckDate"
+                    presentation="date"
+                    [readonly]="!isEditing"
+                    placeholder="Select check date">
+                  </ion-datetime>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-checkbox 
+                    [(ngModel)]="profile.backgroundCheck"
+                    [disabled]="!isEditing">
+                  </ion-checkbox>
+                  <ion-label>Background check completed</ion-label>
+                </ion-item>
+              </ion-col>
+              
+              <ion-col size="12" size-md="6">
+                <ion-item class="profile-item">
+                  <ion-checkbox 
+                    [(ngModel)]="profile.insurance"
+                    [disabled]="!isEditing">
+                  </ion-checkbox>
+                  <ion-label>Professional liability insurance</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row *ngIf="profile.insurance">
+              <ion-col size="12">
+                <ion-item class="profile-item">
+                  <ion-label position="stacked">Insurance Provider</ion-label>
+                  <ion-input 
+                    [(ngModel)]="profile.insuranceProvider"
+                    placeholder="Enter insurance provider name"
+                    [readonly]="!isEditing">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Communication Preferences Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="chatbubble-outline"></ion-icon>
+            Communication Preferences
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="preferences-section">
+            <h4>Preferred Languages</h4>
+            <div class="checkbox-grid">
+              <ion-item *ngFor="let language of languageOptions" class="checkbox-item">
+                <ion-checkbox 
+                  slot="start" 
+                  [checked]="profile.languagePreferences.includes(language)"
+                  (ionChange)="toggleLanguage(language)"
+                  [disabled]="!isEditing">
+                </ion-checkbox>
+                <ion-label>{{ language }}</ion-label>
+              </ion-item>
+            </div>
+          </div>
+          
+          <div class="preferences-section">
+            <h4>Preferred Communication Methods</h4>
+            <div class="checkbox-grid">
+              <ion-item *ngFor="let method of communicationOptions" class="checkbox-item">
+                <ion-checkbox 
+                  slot="start" 
+                  [checked]="profile.preferredCommunication.includes(method)"
+                  (ionChange)="toggleCommunication(method)"
+                  [disabled]="!isEditing">
+                </ion-checkbox>
+                <ion-label>{{ method }}</ion-label>
+              </ion-item>
+            </div>
+          </div>
+          
+          <ion-item class="profile-item">
+            <ion-label position="stacked">Special Requirements or Notes</ion-label>
+            <ion-textarea 
+              [(ngModel)]="profile.specialRequirements"
+              placeholder="Any special requirements, equipment you bring, or additional information for clients..."
+              [readonly]="!isEditing"
+              rows="4">
+            </ion-textarea>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Bio & References Section -->
+      <ion-card class="info-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="document-text-outline"></ion-icon>
+            Bio & References
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item class="profile-item">
+            <ion-label position="stacked">Professional Bio</ion-label>
+            <ion-textarea 
+              [(ngModel)]="profile.bio"
+              placeholder="Tell clients about yourself, your experience, and why you're passionate about caregiving..."
+              [readonly]="!isEditing"
+              rows="6">
+            </ion-textarea>
+          </ion-item>
+          
+          <div class="references-section">
+            <div class="references-header">
+              <h4>References</h4>
+              <ion-button 
+                fill="clear" 
+                size="small" 
+                (click)="addReference()"
+                *ngIf="isEditing">
+                Add Reference
+              </ion-button>
+            </div>
+            
+            <div class="references-list" *ngIf="profile.references.length > 0">
+              <ion-card *ngFor="let reference of profile.references; let i = index" class="reference-card">
+                <ion-card-content>
+                  <div class="reference-content">
+                    <div class="reference-info">
+                      <h5>{{ reference.name }}</h5>
+                      <p class="reference-relationship">{{ reference.relationship }}</p>
+                      <p class="reference-contact">{{ reference.phoneNumber }}</p>
+                      <p class="reference-email" *ngIf="reference.email">{{ reference.email }}</p>
+                    </div>
+                    <ion-button 
+                      fill="clear" 
+                      color="danger" 
+                      size="small"
+                      (click)="removeReference(reference)"
+                      *ngIf="isEditing">
+                      <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </div>
+            
+            <div *ngIf="profile.references.length === 0" class="empty-state">
+              No references added
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Save Button (when editing) -->
+      <div class="save-section" *ngIf="isEditing">
+        <ion-button 
+          expand="block" 
+          color="primary"
+          (click)="saveProfile()"
+          [disabled]="isLoading">
+          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <ion-icon name="save-outline" slot="start" *ngIf="!isLoading"></ion-icon>
+          <span *ngIf="!isLoading">Save Profile</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </ion-button>
+      </div>
+
+      <!-- KYC Information Card -->
+      <ion-card class="kyc-info-card" *ngIf="profile.kycStatus !== 'pending'">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            KYC Status Information
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="kyc-status-info">
+            <div class="status-row">
+              <span class="status-label">Current Status:</span>
+              <ion-badge [color]="getKycStatusColor()">{{ getKycStatusText() }}</ion-badge>
+            </div>
+            
+            <div class="status-description" [ngSwitch]="profile.kycStatus">
+              <p *ngSwitchCase="'submitted'">
+                <ion-icon name="information-circle-outline" color="warning"></ion-icon>
+                Your KYC application is under review. We will notify you once the review is complete (typically within 24-48 hours).
+              </p>
+              <p *ngSwitchCase="'approved'">
+                <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+                Congratulations! Your profile has been verified. You can now receive care requests from clients.
+              </p>
+              <p *ngSwitchCase="'rejected'">
+                <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+                Your KYC application was not approved. Please contact support for more information.
+              </p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Bottom spacing -->
+      <div class="bottom-spacing"></div>
+    </div>
+  </ion-content>
+</div>

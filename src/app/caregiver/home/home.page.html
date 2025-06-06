@@ -1,13 +1,203 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>home</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<div class="ion-page" id="main-content">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">home</ion-title>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        <div class="header-content">
+          <img src="../../assets/logo.svg" alt="ReCare Logo" class="header-logo">
+        </div>
+      </ion-title>
     </ion-toolbar>
   </ion-header>
-</ion-content>
+
+  <ion-content [fullscreen]="true" class="main-content-area">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h1 class="greeting">{{ getGreeting() }}, {{ userName }}!</h1>
+      <p class="date">{{ currentDate | date:'EEEE, MMMM d, y' }}</p>
+      <div class="professional-badge">
+        <ion-icon name="medical-outline"></ion-icon>
+        <span>Professional Caregiver</span>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-section">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-card class="stat-card primary-stat" (click)="viewFullSchedule()">
+              <ion-card-content>
+                <div class="stat-icon">
+                  <ion-icon name="calendar-outline" color="primary"></ion-icon>
+                </div>
+                <div class="stat-value">{{ stats.todayAppointments }}</div>
+                <div class="stat-label">Today's Sessions</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6">
+            <ion-card class="stat-card success-stat">
+              <ion-card-content>
+                <div class="stat-icon">
+                  <ion-icon name="people-outline" color="success"></ion-icon>
+                </div>
+                <div class="stat-value">{{ stats.activeClients }}</div>
+                <div class="stat-label">Active Clients</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6">
+            <ion-card class="stat-card earnings-stat" (click)="navigateToAnalytics()">
+              <ion-card-content>
+                <div class="stat-icon">
+                  <ion-icon name="wallet-outline" color="warning"></ion-icon>
+                </div>
+                <div class="stat-value">{{ formatCurrency(stats.monthlyEarnings) }}</div>
+                <div class="stat-label">This Month</div>
+                <div class="stat-trend">
+                  <ion-icon name="trending-up-outline" color="success"></ion-icon>
+                  <span>+12%</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6">
+            <ion-card class="stat-card rating-stat" (click)="navigateToAnalytics()">
+              <ion-card-content>
+                <div class="stat-icon">
+                  <ion-icon name="star-outline" color="warning"></ion-icon>
+                </div>
+                <div class="stat-value">{{ stats.currentRating }}</div>
+                <div class="stat-label">Rating</div>
+                <div class="stat-subtitle">{{ stats.completedSessions }} reviews</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- Today's Schedule Preview -->
+    <div class="schedule-preview-section">
+      <div class="section-header">
+        <h2 class="section-title">Today's Schedule</h2>
+        <ion-button fill="clear" size="small" (click)="viewFullSchedule()">
+          View All
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+      
+      <ion-card class="schedule-card">
+        <ion-card-content>
+          <div class="schedule-item" *ngFor="let appointment of todaySchedule">
+            <div class="schedule-time">
+              <div class="time">{{ appointment.time }}</div>
+              <div class="duration">{{ appointment.duration }}</div>
+            </div>
+            <div class="schedule-details">
+              <h4 class="client-name">{{ appointment.client }}</h4>
+              <p class="service-type">{{ appointment.service }}</p>
+            </div>
+            <div class="schedule-status">
+              <ion-badge [color]="getStatusColor(appointment.status)">
+                {{ getStatusText(appointment.status) }}
+              </ion-badge>
+            </div>
+          </div>
+          
+          <div class="empty-schedule" *ngIf="todaySchedule.length === 0">
+            <ion-icon name="calendar-outline" color="medium"></ion-icon>
+            <p>No appointments scheduled for today</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+      <h2 class="section-title">Quick Actions</h2>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" *ngFor="let action of quickActions">
+            <ion-card class="action-card" (click)="handleQuickAction(action)">
+              <ion-card-content>
+                <div class="action-header">
+                  <ion-icon [name]="action.icon" [color]="action.color" class="action-icon"></ion-icon>
+                </div>
+                <h3 class="action-title">{{ action.title }}</h3>
+                <p class="action-description">{{ action.description }}</p>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Activity</h2>
+        <ion-button fill="clear" size="small" (click)="viewAllActivities()">
+          View All
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+      
+      <ion-card class="activity-card">
+        <ion-card-content>
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-icon">
+              <ion-icon [name]="activity.icon" [color]="activity.color"></ion-icon>
+            </div>
+            <div class="activity-content">
+              <h4 class="activity-title">{{ activity.title }}</h4>
+              <p class="activity-details">{{ activity.details }}</p>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
+          </div>
+          
+          <div class="empty-activity" *ngIf="recentActivities.length === 0">
+            <ion-icon name="notifications-outline" color="medium"></ion-icon>
+            <p>No recent activities</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Performance Summary -->
+    <div class="performance-section">
+      <h2 class="section-title">Performance Summary</h2>
+      <ion-card class="performance-card">
+        <ion-card-content>
+          <div class="performance-grid">
+            <div class="performance-item">
+              <div class="performance-value">{{ stats.completedSessions }}</div>
+              <div class="performance-label">Total Sessions</div>
+            </div>
+            <div class="performance-item">
+              <div class="performance-value">{{ stats.responseRate }}%</div>
+              <div class="performance-label">Response Rate</div>
+            </div>
+            <div class="performance-item">
+              <div class="performance-value">{{ stats.currentRating }}/5</div>
+              <div class="performance-label">Avg Rating</div>
+            </div>
+          </div>
+          
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            color="primary" 
+            class="analytics-button"
+            routerLink="/caregiver/analytics">
+            <ion-icon name="stats-chart-outline" slot="start"></ion-icon>
+            View Detailed Analytics
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ion-content>
+</div>
