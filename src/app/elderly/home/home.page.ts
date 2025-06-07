@@ -70,7 +70,7 @@ export class HomePage implements OnInit {
     upcomingAppointments: 2,
     activeCaregivers: 1,
     completedSessions: 15,
-    averageRating: 4.8
+    averageRating: 4300,
   };
 
   // Quick actions
@@ -79,25 +79,29 @@ export class HomePage implements OnInit {
       title: 'Book Care',
       icon: 'medical-outline',
       color: 'primary',
-      route: '/elderly/book-care'
+      route: '/elderly/book-care',
+      description: 'Book a care session'
     },
     {
       title: 'My Caregivers',
       icon: 'people-outline',
       color: 'success',
-      route: '/elderly/caregivers'
+      route: '/elderly/caregivers',
+      description: 'View your caregivers'
     },
     {
       title: 'Schedule',
       icon: 'calendar-outline',
       color: 'warning',
-      route: '/elderly/schedule'
+      route: '/elderly/schedule',
+      description: 'View your schedule'
     },
     {
       title: 'Emergency',
       icon: 'call-outline',
       color: 'danger',
-      action: 'emergency'
+      action: 'emergency',
+      description: 'Contact emergency support'
     }
   ];
 

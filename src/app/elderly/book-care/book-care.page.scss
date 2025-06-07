@@ -1,19 +1,956 @@
+:host {
+  --ion-color-primary: #4C8DFF;
+  --booking-spacing: 16px;
+  --card-border-radius: 12px;
+  --section-spacing: 20px;
+}
+
 #main-content {
-    height: 100%;
-  }
+  height: 100%;
+}
+
+.main-content-area {
+  --background: var(--ion-background-color);
+}
+
+.header-content {
+  display: flex;
   
-  .main-content-area {
-    --background: var(--ion-background-color);
+  .header-logo {
+    height: 28px;
+    width: auto;
   }
+}
+
+.booking-container {
+  padding: var(--booking-spacing);
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 80px; 
+}
+
+// Progress Section
+.progress-section {
+  margin-bottom: var(--section-spacing);
   
-  .header-content {
-    display: flex;
+  .progress-header {
+    text-align: center;
+    margin-bottom: 16px;
     
-    .header-logo {
-      height: 28px;
-      width: auto;
+    .step-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+      margin: 0 0 4px 0;
+    }
+    
+    .step-indicator {
+      font-size: 0.9rem;
+      color: var(--ion-color-medium);
+      margin: 0;
     }
   }
   
+  .progress-bar {
+    height: 4px;
+    background: var(--ion-color-light);
+    border-radius: 2px;
+    overflow: hidden;
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--ion-color-primary), var(--ion-color-secondary));
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+  }
+}
 
+// Step Content
+.step-content {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Filter Card
+.filter-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   
+  .search-section {
+    margin-bottom: 16px;
+    
+    .search-item {
+      --background: var(--ion-color-light);
+      --border-radius: 8px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      border-radius: 8px;
+      
+      ion-icon {
+        color: var(--ion-color-medium);
+        margin-right: 8px;
+      }
+    }
+  }
+  
+  .filter-section {
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+      margin: 0 0 12px 0;
+    }
+    
+    ion-segment {
+      --background: var(--ion-color-light);
+    }
+  }
+}
+
+// Caregivers Section
+.caregivers-section {
+  .section-header {
+    margin-bottom: 16px;
+    
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+      margin: 0;
+    }
+  }
+}
+
+// Caregiver Cards
+.caregiver-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.selected {
+    border-color: var(--ion-color-primary);
+    background: rgba(var(--ion-color-primary-rgb), 0.05);
+  }
+  
+  .caregiver-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    
+    .caregiver-info {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      
+      .caregiver-avatar {
+        width: 60px;
+        height: 60px;
+        border: 2px solid var(--ion-color-primary);
+      }
+      
+      .caregiver-details {
+        flex: 1;
+        
+        .caregiver-name {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--ion-text-color);
+          margin: 0 0 4px 0;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          
+          .verified-icon {
+            font-size: 1rem;
+          }
+        }
+        
+        .caregiver-rating {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-bottom: 4px;
+          
+          .rating-value {
+            font-weight: 600;
+            color: var(--ion-text-color);
+          }
+          
+          .rating-count {
+            font-size: 0.85rem;
+            color: var(--ion-color-medium);
+          }
+        }
+        
+        .caregiver-location {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.9rem;
+          color: var(--ion-color-medium);
+        }
+      }
+    }
+    
+    .caregiver-status {
+      text-align: right;
+      
+      .status-badge {
+        margin-bottom: 8px;
+        font-size: 0.75rem;
+      }
+      
+      .hourly-rate {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--ion-color-success);
+      }
+    }
+  }
+  
+  .caregiver-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+      color: var(--ion-color-medium);
+      
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .caregiver-specializations {
+    margin-bottom: 12px;
+    
+    ion-chip {
+      margin: 2px 4px 2px 0;
+      font-size: 0.75rem;
+    }
+  }
+  
+  .caregiver-bio {
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    line-height: 1.4;
+    margin: 0 0 12px 0;
+  }
+  
+  .selection-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ion-color-success);
+    font-weight: 600;
+    font-size: 0.9rem;
+    
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Services Card
+.services-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .service-item {
+      border: 2px solid var(--ion-color-light);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        border-color: var(--ion-color-primary);
+        background: rgba(var(--ion-color-primary-rgb), 0.05);
+      }
+      
+      &.selected {
+        border-color: var(--ion-color-primary);
+        background: rgba(var(--ion-color-primary-rgb), 0.1);
+      }
+      
+      .service-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        
+        .service-icon {
+          font-size: 1.5rem;
+          color: var(--ion-color-primary);
+          margin-top: 2px;
+        }
+        
+        .service-info {
+          flex: 1;
+          
+          .service-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ion-text-color);
+            margin: 0 0 4px 0;
+          }
+          
+          .service-description {
+            font-size: 0.85rem;
+            color: var(--ion-color-medium);
+            margin: 0;
+            line-height: 1.3;
+          }
+        }
+        
+        ion-checkbox {
+          --size: 20px;
+        }
+      }
+    }
+  }
+}
+
+// Schedule Card
+.schedule-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .range-value {
+    text-align: center;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+    margin: 8px 0 0 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Requirements Card
+.requirements-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .requirements-grid {
+    .requirement-item {
+      --padding-start: 0;
+      --padding-end: 0;
+      --inner-padding-end: 0;
+      --inner-padding-start: 0;
+      --border-width: 0;
+      --background: transparent;
+      margin-bottom: 8px;
+      
+      ion-checkbox {
+        margin-right: 12px;
+        --size: 18px;
+      }
+    }
+  }
+}
+
+// Cost Card
+.cost-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .cost-breakdown {
+    .cost-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--ion-color-light);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      span:first-child {
+        color: var(--ion-text-color);
+      }
+      
+      span:last-child {
+        font-weight: 600;
+        color: var(--ion-text-color);
+      }
+    }
+    
+    .cost-total {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px solid var(--ion-color-primary);
+      
+      span:first-child {
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+      
+      .total-amount {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+}
+
+// Summary Cards
+.summary-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .caregiver-summary {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    
+    .summary-avatar {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--ion-color-primary);
+    }
+    
+    .summary-details {
+      h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--ion-text-color);
+        margin: 0 0 4px 0;
+      }
+      
+      .summary-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+        color: var(--ion-text-color);
+      }
+      
+      .summary-rate {
+        font-weight: 600;
+        color: var(--ion-color-success);
+      }
+    }
+  }
+  
+  .services-summary {
+    ion-chip {
+      margin: 2px 4px 2px 0;
+    }
+  }
+  
+  .schedule-summary {
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      color: var(--ion-text-color);
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      ion-icon {
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+  .requirements-summary {
+    ion-chip {
+      margin: 2px 4px 2px 0;
+    }
+  }
+  
+  .notes-text {
+    font-size: 0.95rem;
+    color: var(--ion-text-color);
+    line-height: 1.5;
+    margin: 0;
+    padding: 12px;
+    background: rgba(var(--ion-color-light-rgb), 0.5);
+    border-radius: 8px;
+  }
+}
+
+// Contact Card
+.contact-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Final Cost Card
+.final-cost-card {
+  --border-radius: var(--card-border-radius);
+  margin-bottom: var(--section-spacing);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--ion-color-primary);
+  
+  .final-cost-breakdown {
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--ion-color-light);
+      
+      span:first-child {
+        color: var(--ion-text-color);
+      }
+      
+      span:last-child {
+        font-weight: 600;
+        color: var(--ion-text-color);
+      }
+    }
+    
+    .cost-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 0 0;
+      margin-top: 12px;
+      border-top: 2px solid var(--ion-color-primary);
+      
+      span:first-child {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ion-text-color);
+      }
+      
+      .total-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+  
+  .payment-info {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(var(--ion-color-primary-rgb), 0.1);
+    border-radius: 8px;
+    
+    ion-icon {
+      font-size: 1.2rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--ion-text-color);
+      line-height: 1.4;
+    }
+  }
+}
+
+// Navigation Section
+.navigation-section {
+  display: flex;
+  gap: 12px;
+  margin-top: var(--section-spacing);
+  
+  .nav-button {
+    --border-radius: 8px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 600;
+    
+    &.primary-nav {
+      flex: 1;
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ion-color-medium);
+  
+  ion-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// Bottom Spacing
+.bottom-spacing {
+  height: 40px;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .booking-container {
+    padding: 12px;
+  }
+  
+  .caregiver-card {
+    .caregiver-header {
+      flex-direction: column;
+      gap: 12px;
+      
+      .caregiver-status {
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+    }
+    
+    .caregiver-meta {
+      justify-content: space-between;
+      
+      .meta-item {
+        font-size: 0.8rem;
+      }
+    }
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .navigation-section {
+    flex-direction: column;
+    
+    .nav-button {
+      width: 100%;
+    }
+  }
+  
+  .cost-breakdown,
+  .final-cost-breakdown {
+    .cost-item,
+    .cost-row {
+      font-size: 0.9rem;
+    }
+    
+    .cost-total,
+    .cost-total-row {
+      .total-amount,
+      .total-price {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}
+
+// Dark Mode Adjustments
+@media (prefers-color-scheme: dark) {
+  .caregiver-card,
+  .services-card,
+  .schedule-card,
+  .requirements-card,
+  .cost-card,
+  .summary-card,
+  .contact-card,
+  .final-cost-card,
+  .filter-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+  
+  .service-item {
+    border-color: var(--ion-color-step-200);
+    
+    &:hover,
+    &.selected {
+      border-color: var(--ion-color-primary);
+    }
+  }
+  
+  .search-item {
+    --background: var(--ion-color-step-50);
+  }
+  
+  .notes-text {
+    background: rgba(var(--ion-color-step-100), 0.3);
+  }
+  
+  .payment-info {
+    background: rgba(var(--ion-color-primary-rgb), 0.15);
+  }
+}
+
+// Loading States
+.caregiver-card,
+.service-item {
+  &.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    animation: loading-shimmer 1.5s infinite;
+  }
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+// Accessibility Improvements
+.caregiver-card,
+.service-item {
+  &:focus {
+    outline: 2px solid var(--ion-color-primary);
+    outline-offset: 2px;
+  }
+}
+
+ion-button {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.3);
+  }
+}
+
+// Animation Enhancements
+.caregiver-card {
+  &.selected {
+    animation: cardSelect 0.3s ease-out;
+  }
+}
+
+@keyframes cardSelect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.service-item {
+  &.selected {
+    animation: serviceSelect 0.2s ease-out;
+  }
+}
+
+@keyframes serviceSelect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Enhanced Card Headers
+ion-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  
+  ion-icon {
+    font-size: 1.2rem;
+  }
+}
+
+// Progress Bar Enhancements
+.progress-bar {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progressShimmer 2s infinite;
+  }
+}
+
+@keyframes progressShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Enhanced Hover Effects
+.caregiver-card:hover {
+  .caregiver-name {
+    color: var(--ion-color-primary);
+    transition: color 0.2s ease;
+  }
+  
+  .hourly-rate {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+  }
+}
+
+.service-item:hover {
+  .service-name {
+    color: var(--ion-color-primary);
+    transition: color 0.2s ease;
+  }
+  
+  .service-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+}
+
+// Status Indicators
+.status-badge {
+  position: relative;
+  
+  &[color="success"]::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    background: var(--ion-color-success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+}
+
+// Form Field Enhancements
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+  --border-width: 0;
+  --background: transparent;
+  margin-bottom: 16px;
+  
+  ion-label {
+    font-weight: 500;
+    color: var(--ion-text-color);
+    margin-bottom: 8px;
+  }
+  
+  ion-input,
+  ion-textarea,
+  ion-select,
+  ion-datetime {
+    --background: var(--ion-color-light);
+    --border-radius: 8px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    border: 1px solid var(--ion-color-medium-tint);
+    border-radius: 8px;
+    
+    &:focus-within {
+      border-color: var(--ion-color-primary);
+      box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+    }
+  }
+}
+
+// Chip Enhancements
+ion-chip {
+  --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  --color: var(--ion-color-primary);
+  border: 1px solid rgba(var(--ion-color-primary-rgb), 0.3);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    --background: rgba(var(--ion-color-primary-rgb), 0.2);
+    transform: translateY(-1px);
+  }
+}

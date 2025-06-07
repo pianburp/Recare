@@ -63,7 +63,7 @@
                   <ion-icon name="star-outline" color="warning"></ion-icon>
                 </div>
                 <div class="stat-value">{{ stats.averageRating }}</div>
-                <div class="stat-label">Rating</div>
+                <div class="stat-label">Points</div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -79,8 +79,11 @@
           <ion-col size="6" *ngFor="let action of quickActions">
             <ion-card class="action-card" (click)="handleQuickAction(action)">
               <ion-card-content>
-                <ion-icon [name]="action.icon" [color]="action.color" class="action-icon"></ion-icon>
-                <p class="action-title">{{ action.title }}</p>
+                <div class="action-header">
+                  <ion-icon [name]="action.icon" [color]="action.color" class="action-icon"></ion-icon>
+                </div>
+                <h3 class="action-title">{{ action.title }}</h3>
+                <p class="action-description">{{ action.description }}</p>
               </ion-card-content>
             </ion-card>
           </ion-col>

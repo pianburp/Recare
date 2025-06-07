@@ -42,10 +42,6 @@ export const routes: Routes = [
         loadComponent: () => import('./elderly/reward/reward.page').then( m => m.RewardPage)
       },
       {
-        path: 'history',
-        loadComponent: () => import('./elderly/history/history.page').then( m => m.HistoryPage)
-      },
-      {
         path: 'book-care',
         loadComponent: () => import('./elderly/book-care/book-care.page').then( m => m.BookCarePage)
       },
@@ -56,6 +52,10 @@ export const routes: Routes = [
       {
         path: 'kyc',
         loadComponent: () => import('./elderly/kyc/kyc.page').then( m => m.KycPage)
+      },
+      {
+        path: 'payment',
+        loadComponent: () => import('./elderly/payment/payment.page').then( m => m.PaymentPage)
       },
 
     ]
@@ -74,7 +74,19 @@ export const routes: Routes = [
       {
         path: 'kyc',
         loadComponent: () => import('./caregiver/kyc/kyc.page').then( m => m.KycPage)
-      }
+      },
+      {
+        path: 'analytics',
+        loadComponent: () => import('./caregiver/analytics/analytics.page').then( m => m.AnalyticsPage)
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./caregiver/notifications/notifications.page').then( m => m.NotificationsPage)
+      },
+      {
+        path: 'schedule',
+        loadComponent: () => import('./caregiver/schedule/schedule.page').then( m => m.SchedulePage)
+      },
     ]
   },
   {
@@ -89,20 +101,8 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/home/home.page').then( m => m.HomePage)
       }
     ]
-  },  {
-    path: 'analytics',
-    loadComponent: () => import('./caregiver/analytics/analytics.page').then( m => m.AnalyticsPage)
   },
-  {
-    path: 'notifications',
-    loadComponent: () => import('./caregiver/notifications/notifications.page').then( m => m.NotificationsPage)
-  },
-  {
-    path: 'schedule',
-    loadComponent: () => import('./caregiver/schedule/schedule.page').then( m => m.SchedulePage)
-  },
+  
 
-  
-  
 
 ];

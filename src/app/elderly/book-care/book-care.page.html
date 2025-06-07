@@ -13,7 +13,517 @@
   </ion-header>
   
   <ion-content [fullscreen]="true" class="main-content-area">
-  
+    <div class="booking-container">
+      <!-- Progress Indicator -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <h2 class="step-title">{{ getStepTitle() }}</h2>
+          <p class="step-indicator">Step {{ currentStep }} of {{ totalSteps }}</p>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+        </div>
+      </div>
+
+      <!-- Step 1: Caregiver Selection -->
+      <div class="step-content" *ngIf="currentStep === 1">
+        <!-- Search and Filters -->
+        <ion-card class="filter-card">
+          <ion-card-content>
+            <div class="search-section">
+              <ion-item class="search-item">
+                <ion-icon name="search-outline" slot="start"></ion-icon>
+                <ion-input 
+                  [(ngModel)]="searchQuery"
+                  placeholder="Search caregivers by name or specialization"
+                  (ionInput)="filterCaregivers()">
+                </ion-input>
+              </ion-item>
+            </div>
+            
+            <div class="filter-section">
+              <h4>Quick Filters</h4>
+              <ion-segment [(ngModel)]="selectedFilters.availability" (ionChange)="filterCaregivers()">
+                <ion-segment-button value="all">
+                  <ion-label>All</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="online">
+                  <ion-label>Online Now</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="verified">
+                  <ion-label>Verified</ion-label>
+                </ion-segment-button>
+              </ion-segment>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Available Caregivers -->
+        <div class="caregivers-section">
+          <div class="section-header">
+            <h3>Available Caregivers ({{ filteredCaregivers.length }})</h3>
+          </div>
+
+          <ion-card 
+            *ngFor="let caregiver of filteredCaregivers" 
+            class="caregiver-card"
+            [class.selected]="selectedCaregiver?.id === caregiver.id"
+            (click)="selectCaregiver(caregiver)">
+            <ion-card-content>
+              <div class="caregiver-header">
+                <div class="caregiver-info">
+                  <ion-avatar class="caregiver-avatar">
+                    <img [src]="caregiver.profilePicture" [alt]="caregiver.fullName">
+                  </ion-avatar>
+                  <div class="caregiver-details">
+                    <h4 class="caregiver-name">
+                      {{ caregiver.fullName }}
+                      <ion-icon 
+                        name="shield-checkmark-outline" 
+                        color="success" 
+                        *ngIf="caregiver.isVerified"
+                        class="verified-icon">
+                      </ion-icon>
+                    </h4>
+                    <div class="caregiver-rating">
+                      <ion-icon name="star" color="warning"></ion-icon>
+                      <span class="rating-value">{{ caregiver.rating }}</span>
+                      <span class="rating-count">({{ caregiver.totalReviews }} reviews)</span>
+                    </div>
+                    <div class="caregiver-location">
+                      <ion-icon name="location-outline" color="medium"></ion-icon>
+                      <span>{{ caregiver.location }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="caregiver-status">
+                  <ion-badge [color]="caregiver.isOnline ? 'success' : 'medium'" class="status-badge">
+                    {{ caregiver.isOnline ? 'Online' : 'Offline' }}
+                  </ion-badge>
+                  <div class="hourly-rate">{{ formatCurrency(caregiver.hourlyRate) }}/hr</div>
+                </div>
+              </div>
+
+              <div class="caregiver-meta">
+                <div class="meta-item">
+                  <ion-icon name="time-outline" color="medium"></ion-icon>
+                  <span>Response: {{ caregiver.responseTime }}</span>
+                </div>
+                <div class="meta-item">
+                  <ion-icon name="checkmark-circle" color="medium"></ion-icon>
+                  <span>{{ caregiver.completedSessions }} sessions</span>
+                </div>
+                <div class="meta-item">
+                  <ion-icon name="car-outline" color="medium"></ion-icon>
+                  <span>{{ caregiver.travelRadius }}km radius</span>
+                </div>
+              </div>
+
+              <div class="caregiver-specializations">
+                <ion-chip *ngFor="let spec of caregiver.specializations.slice(0, 3)" 
+                         size="small" 
+                         color="primary" 
+                         outline="true">
+                  <ion-label>{{ spec }}</ion-label>
+                </ion-chip>
+              </div>
+
+              <p class="caregiver-bio">{{ caregiver.bio }}</p>
+
+              <div class="selection-indicator" *ngIf="selectedCaregiver?.id === caregiver.id">
+                <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                <span>Selected</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <div class="empty-state" *ngIf="filteredCaregivers.length === 0">
+            <ion-icon name="people-outline" color="medium"></ion-icon>
+            <h3>No caregivers found</h3>
+            <p>Try adjusting your search or filters</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Service Details -->
+      <div class="step-content" *ngIf="currentStep === 2">
+        <!-- Service Selection -->
+        <ion-card class="services-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="medical-outline"></ion-icon>
+              Select Care Services
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="services-grid">
+              <div 
+                *ngFor="let service of serviceOptions" 
+                class="service-item"
+                [class.selected]="bookingDetails.selectedServices.includes(service.id)"
+                (click)="toggleService(service.id)">
+                <div class="service-header">
+                  <ion-icon [name]="service.icon" class="service-icon"></ion-icon>
+                  <div class="service-info">
+                    <h4 class="service-name">{{ service.name }}</h4>
+                    <p class="service-description">{{ service.description }}</p>
+                  </div>
+                  <ion-checkbox 
+                    [checked]="bookingDetails.selectedServices.includes(service.id)"
+                    (click)="$event.stopPropagation()">
+                  </ion-checkbox>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Schedule Selection -->
+        <ion-card class="schedule-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="calendar-outline"></ion-icon>
+              Schedule Appointment
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-item>
+                    <ion-label position="stacked">Date *</ion-label>
+                    <ion-datetime 
+                      [(ngModel)]="bookingDetails.scheduleDate"
+                      presentation="date"
+                      [min]="getMinDate()"
+                      placeholder="Select date">
+                    </ion-datetime>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="12" size-md="6">
+                  <ion-item>
+                    <ion-label position="stacked">Start Time *</ion-label>
+                    <ion-datetime 
+                      [(ngModel)]="bookingDetails.startTime"
+                      presentation="time"
+                      placeholder="Select time">
+                    </ion-datetime>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-item>
+                    <ion-label position="stacked">Duration (hours)</ion-label>
+                    <ion-range 
+                      [(ngModel)]="bookingDetails.duration"
+                      min="1"
+                      max="12"
+                      step="0.5"
+                      snaps="true"
+                      ticks="true"
+                      (ionChange)="onDurationChange()">
+                      <ion-label slot="start">1h</ion-label>
+                      <ion-label slot="end">12h</ion-label>
+                    </ion-range>
+                    <p class="range-value">{{ bookingDetails.duration }} hours</p>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="12" size-md="6">
+                  <ion-item>
+                    <ion-label position="stacked">Urgency Level</ion-label>
+                    <ion-select 
+                      [(ngModel)]="bookingDetails.urgencyLevel"
+                      (ionChange)="onUrgencyChange()"
+                      placeholder="Select urgency">
+                      <ion-select-option *ngFor="let option of urgencyOptions" [value]="option.value">
+                        {{ option.label }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Special Requirements -->
+        <ion-card class="requirements-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="list-outline"></ion-icon>
+              Special Requirements
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="requirements-grid">
+              <ion-item *ngFor="let requirement of specialRequirementsOptions" class="requirement-item">
+                <ion-checkbox 
+                  slot="start"
+                  [checked]="bookingDetails.specialRequirements.includes(requirement)"
+                  (ionChange)="toggleSpecialRequirement(requirement)">
+                </ion-checkbox>
+                <ion-label>{{ requirement }}</ion-label>
+              </ion-item>
+            </div>
+
+            <ion-item>
+              <ion-label position="stacked">Additional Notes</ion-label>
+              <ion-textarea 
+                [(ngModel)]="bookingDetails.additionalNotes"
+                placeholder="Any specific instructions or requests for the caregiver..."
+                rows="4">
+              </ion-textarea>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Cost Estimate -->
+        <ion-card class="cost-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="calculator-outline"></ion-icon>
+              Cost Estimate
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="cost-breakdown">
+              <div class="cost-item">
+                <span>Base Rate ({{ bookingDetails.duration }}h × {{ formatCurrency(bookingDetails.caregiverRate) }})</span>
+                <span>{{ formatCurrency(getSubtotal()) }}</span>
+              </div>
+              <div class="cost-item" *ngIf="bookingDetails.urgencyLevel !== 'standard'">
+                <span>Urgency Fee</span>
+                <span>+{{ getUrgencyFeePercentage() }}%</span>
+              </div>
+              <div class="cost-item">
+                <span>Platform Fee (10%)</span>
+                <span>{{ formatCurrency(getPlatformFee()) }}</span>
+              </div>
+              <div class="cost-total">
+                <span>Total Estimated Cost</span>
+                <span class="total-amount">{{ formatCurrency(bookingDetails.estimatedCost) }}</span>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Step 3: Booking Summary -->
+      <div class="step-content" *ngIf="currentStep === 3">
+        <!-- Selected Caregiver Summary -->
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="person-outline"></ion-icon>
+              Selected Caregiver
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="caregiver-summary">
+              <ion-avatar class="summary-avatar">
+                <img [src]="selectedCaregiver?.profilePicture" [alt]="selectedCaregiver?.fullName">
+              </ion-avatar>
+              <div class="summary-details">
+                <h4>{{ selectedCaregiver?.fullName }}</h4>
+                <div class="summary-rating">
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <span>{{ selectedCaregiver?.rating }} ({{ selectedCaregiver?.totalReviews }} reviews)</span>
+                </div>
+                <div class="summary-rate">{{ formatCurrency(selectedCaregiver?.hourlyRate || 0) }}/hour</div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Services Summary -->
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="list-outline"></ion-icon>
+              Selected Services
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="services-summary">
+              <ion-chip *ngFor="let serviceId of bookingDetails.selectedServices" color="primary">
+                <ion-label>{{ getServiceName(serviceId) }}</ion-label>
+              </ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Schedule Summary -->
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="calendar-outline"></ion-icon>
+              Schedule Details
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="schedule-summary">
+              <div class="schedule-item">
+                <ion-icon name="calendar" color="primary"></ion-icon>
+                <span>{{ bookingDetails.scheduleDate | date:'fullDate' }}</span>
+              </div>
+              <div class="schedule-item">
+                <ion-icon name="time-outline" color="primary"></ion-icon>
+                <span>{{ bookingDetails.startTime | date:'shortTime' }} ({{ bookingDetails.duration }} hours)</span>
+              </div>
+              <div class="schedule-item">
+                <ion-icon name="flash-outline" color="warning"></ion-icon>
+                <span>{{ getUrgencyLabel() }}</span>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Contact Information -->
+        <ion-card class="contact-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="call-outline"></ion-icon>
+              Contact Information
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Service Address *</ion-label>
+              <ion-textarea 
+                [(ngModel)]="bookingDetails.clientAddress"
+                placeholder="Enter the address where care will be provided"
+                rows="3">
+              </ion-textarea>
+            </ion-item>
+            
+            <ion-item>
+              <ion-label position="stacked">Contact Phone *</ion-label>
+              <ion-input 
+                [(ngModel)]="bookingDetails.contactPhone"
+                type="tel"
+                placeholder="+60 12-345 6789">
+              </ion-input>
+            </ion-item>
+            
+            <ion-item>
+              <ion-label position="stacked">Emergency Contact</ion-label>
+              <ion-input 
+                [(ngModel)]="bookingDetails.emergencyContact"
+                type="tel"
+                placeholder="+60 12-345 6789">
+              </ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Special Requirements Summary -->
+        <ion-card class="summary-card" *ngIf="bookingDetails.specialRequirements.length > 0">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="star-outline"></ion-icon>
+              Special Requirements
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="requirements-summary">
+              <ion-chip *ngFor="let requirement of bookingDetails.specialRequirements" color="secondary">
+                <ion-label>{{ requirement }}</ion-label>
+              </ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Additional Notes Summary -->
+        <ion-card class="summary-card" *ngIf="bookingDetails.additionalNotes.trim()">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="chatbubble-outline"></ion-icon>
+              Additional Notes
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="notes-text">{{ bookingDetails.additionalNotes }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Final Cost Summary -->
+        <ion-card class="final-cost-card">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="wallet-outline"></ion-icon>
+              Payment Summary
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="final-cost-breakdown">
+              <div class="cost-row">
+                <span>Service Duration</span>
+                <span>{{ bookingDetails.duration }} hours</span>
+              </div>
+              <div class="cost-row">
+                <span>Hourly Rate</span>
+                <span>{{ formatCurrency(bookingDetails.caregiverRate) }}</span>
+              </div>
+              <div class="cost-row">
+                <span>Subtotal</span>
+                <span>{{ formatCurrency(getSubtotal()) }}</span>
+              </div>
+              <div class="cost-row" *ngIf="bookingDetails.urgencyLevel !== 'standard'">
+                <span>Urgency Fee</span>
+                <span>{{ formatCurrency(getUrgencyFee()) }}</span>
+              </div>
+              <div class="cost-row">
+                <span>Platform Fee</span>
+                <span>{{ formatCurrency(getPlatformFee()) }}</span>
+              </div>
+              <div class="cost-total-row">
+                <span>Total Amount</span>
+                <span class="total-price">{{ formatCurrency(bookingDetails.estimatedCost) }}</span>
+              </div>
+            </div>
+            
+            <div class="payment-info">
+              <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+              <p>Payment will be processed securely. You will only be charged after the service is confirmed.</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="navigation-section">
+        <ion-button 
+          *ngIf="currentStep > 1"
+          fill="outline" 
+          color="medium"
+          (click)="previousStep()"
+          class="nav-button">
+          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+          Back
+        </ion-button>
+
+        <ion-button 
+          expand="block"
+          color="primary"
+          (click)="nextStep()"
+          [disabled]="isLoading"
+          class="nav-button primary-nav">
+          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <span *ngIf="!isLoading && currentStep < totalSteps">
+            Continue
+            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+          </span>
+          <span *ngIf="!isLoading && currentStep === totalSteps">
+            Proceed to Payment
+            <ion-icon name="card-outline" slot="end"></ion-icon>
+          </span>
+        </ion-button>
+      </div>
+
+      <!-- Bottom Spacing -->
+      <div class="bottom-spacing"></div>
+    </div>
   </ion-content>
-  </div>
-  
+</div>

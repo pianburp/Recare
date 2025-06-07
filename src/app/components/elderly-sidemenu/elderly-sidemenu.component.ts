@@ -30,7 +30,8 @@ import {
   giftOutline, 
   logOutOutline,
   homeOutline,
-  chevronForwardOutline
+  chevronForwardOutline,
+  calendarOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from '../../services/firestore.service';
@@ -90,9 +91,9 @@ export class ElderlySidemenuComponent implements OnInit {
       color: 'primary'
     },
     {
-      title: 'Care History',
-      url: '/elderly/history',
-      icon: 'time-outline',
+      title: 'Care Schedule',
+      url: '/elderly/schedule',
+      icon: 'calendar-outline',
       color: 'tertiary'
     },
     {
@@ -121,7 +122,7 @@ export class ElderlySidemenuComponent implements OnInit {
   constructor() {
     addIcons({ 
       personOutline, 
-      timeOutline, 
+      calendarOutline, 
       notificationsOutline, 
       giftOutline, 
       logOutOutline,
